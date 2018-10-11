@@ -15,9 +15,9 @@ public class MainActivity extends AppCompatActivity {
 
     Button playGame; // button
 
-    ImageView imgView1,imgView2; // image
+    ImageView imgView1, imgView2; // image
 
-    TextView textView2,textView3; // textview
+    TextView textView2, textView3; // textview
 
 
     @Override
@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     // oyunu oynatma metodu
     public void playGame(View view) {
 
@@ -44,11 +43,8 @@ public class MainActivity extends AppCompatActivity {
         int value2 = randomDiceValues();
 
         // resim değerlerini alma.
-        int picture1 = getResources().getIdentifier("dice_"+value1,"drawable",getPackageName());
-        int picture2 = getResources().getIdentifier("dice_"+value2,"drawable",getPackageName());
-
-
-
+        int picture1 = getResources().getIdentifier("dice_" + value1, "drawable", getPackageName());
+        int picture2 = getResources().getIdentifier("dice_" + value2, "drawable", getPackageName());
 
 
         // resimleri yükleme
@@ -63,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Random değer üreten fonksiyon
-    public static int randomDiceValues(){
+    public static int randomDiceValues() {
 
 
         return RANDOM.nextInt(6) + 1; // 1-6 arası

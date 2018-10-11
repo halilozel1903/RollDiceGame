@@ -7,27 +7,26 @@
     tools:context=".MainActivity">
 
 
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="200dp"
-        android:orientation="horizontal"
-        android:layout_centerHorizontal="true">
+        android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/imgView1"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/dice_5"
             android:layout_marginRight="25dp"
-            android:id="@+id/imgView1" />
+            android:src="@drawable/dice_5" />
 
         <ImageView
+            android:id="@+id/imgView2"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/dice_2"
             android:layout_marginLeft="25dp"
-            android:id="@+id/imgView2" />
+            android:src="@drawable/dice_2" />
 
 
     </LinearLayout>
@@ -64,7 +63,6 @@
         android:textSize="20sp" />
 
     <TextView
-        android:textColor="@android:color/black"
         android:id="@+id/textView2"
         android:layout_width="89dp"
         android:layout_height="39dp"
@@ -76,11 +74,11 @@
         android:layout_marginBottom="131dp"
         android:gravity="center"
         android:text="5"
+        android:textColor="@android:color/black"
         android:textSize="30sp" />
 
 
     <TextView
-        android:textColor="@android:color/black"
         android:id="@+id/textView3"
         android:layout_width="89dp"
         android:layout_height="39dp"
@@ -96,6 +94,7 @@
         android:layout_marginBottom="131dp"
         android:gravity="center"
         android:text="2"
+        android:textColor="@android:color/black"
         android:textSize="30sp" />
 
 </RelativeLayout>
