@@ -1,7 +1,6 @@
 # Roll Dice Game
 
-<img src = "dice.jpg"/>
-
+<img src = "dice.jpg" width = 300/>
 Android Zar Atma Uygulamasıdır. <br>
 Java dili ile geliştirilmektedir.
 
