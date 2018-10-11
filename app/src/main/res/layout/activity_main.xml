@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/dice_5"
+            android:layout_marginRight="25dp"
+            android:id="@+id/imgView1" />
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/dice_2"
+            android:layout_marginLeft="25dp"
+            android:id="@+id/imgView2" />
+
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/playGame"
+        android:layout_width="249dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/button_shape"
+        android:gravity="center"
+        android:onClick="playGame"
+        android:text="Play Roll Dices"
+        android:textColor="#000000"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="383dp"
+        android:layout_height="50dp"
+        android:layout_alignStart="@+id/playGame"
+        android:layout_alignLeft="@+id/playGame"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="-63dp"
+        android:layout_marginLeft="-63dp"
+        android:layout_marginTop="22dp"
+        android:background="#ff0000"
+        android:gravity="center"
+        android:text="Roll Dices Game"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <TextView
+        android:textColor="@android:color/black"
+        android:id="@+id/textView2"
+        android:layout_width="89dp"
+        android:layout_height="39dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="73dp"
+        android:layout_marginLeft="73dp"
+        android:layout_marginBottom="131dp"
+        android:gravity="center"
+        android:text="5"
+        android:textSize="30sp" />
+
+
+    <TextView
+        android:textColor="@android:color/black"
+        android:id="@+id/textView3"
+        android:layout_width="89dp"
+        android:layout_height="39dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="224dp"
+        android:layout_marginLeft="224dp"
+        android:layout_marginEnd="71dp"
+        android:layout_marginRight="71dp"
+        android:layout_marginBottom="131dp"
+        android:gravity="center"
+        android:text="2"
+        android:textSize="30sp" />
+
+</RelativeLayout>
