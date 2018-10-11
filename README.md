@@ -1,5 +1,7 @@
 # Roll Dice Game
 
+<img src = "dice.jpg"/>
+
 Android Zar Atma Uygulamasıdır. <br>
 Java dili ile geliştirilmektedir.
 
@@ -17,5 +19,5 @@ Zar oyunu ile stres atıp eğlenceli anlar yaşayabilirsiniz.
 ## Ekran Görüntüleri
 
 
-<img src="toDoList1.png" width="200" /> <img src="toDoList6.png" width="200" /> <img src="toDoList2.png" width="200" />
+<img src="https://github.com/halilozel1903/RollDiceGame/blob/master/Screenshot_1539290025.png" width="200" /> <img src="https://github.com/halilozel1903/RollDiceGame/blob/master/Screenshot_1539290034.png" width="200" /> <img src="https://github.com/halilozel1903/RollDiceGame/blob/master/Screenshot_1539290044.png" width="200" />
 
