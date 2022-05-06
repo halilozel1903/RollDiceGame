@@ -9,8 +9,7 @@ Java is a high-level, class-based, object-oriented programming language that is 
 
 By pressing the user play button, two dice are randomly rolled. The images and values ​​of the rolled dice are displayed on the screen. As a next step, the user's victory, draw or loss can be displayed on the screen. With the dice game, you can relieve stress and have fun.
 
-
-##  Screenshots 🖼
+## Screenshots 🖼
 
 <img src="https://github.com/halilozel1903/RollDiceGame/blob/master/Screenshot_1539290025.png" width="200" /> <img src="https://github.com/halilozel1903/RollDiceGame/blob/master/Screenshot_1539290034.png" width="200" /> <img src="https://github.com/halilozel1903/RollDiceGame/blob/master/Screenshot_1539290044.png" width="200" />
 
@@ -18,7 +17,7 @@ By pressing the user play button, two dice are randomly rolled. The images and v
 ```
 MIT License
 
-Copyright (c) 2022 Halil Özel
+Copyright (c) 2022 Halil OZEL
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +31,7 @@ copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE

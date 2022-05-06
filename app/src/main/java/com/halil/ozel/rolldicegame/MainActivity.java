@@ -1,6 +1,6 @@
 package com.halil.ozel.rolldicegame;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     public static final Random RANDOM = new Random(); // Random nesnesi olusturduk.
 
@@ -60,12 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Random değer üreten fonksiyon
     public static int randomDiceValues() {
-
-
         return RANDOM.nextInt(6) + 1; // 1-6 arası
-
-
     }
-
 
 }
