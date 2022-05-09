@@ -11,13 +11,12 @@ import java.util.Random;
 
 public class MainActivity extends Activity {
 
-    public static final Random RANDOM = new Random(); // Random nesnesi olusturduk.
+    // Creating a Random object.
+    public static final Random RANDOM = new Random();
 
-    Button playGame; // button
-
-    ImageView imgView1, imgView2; // image
-
-    TextView textView2, textView3; // textview
+    Button playGame;
+    ImageView imgView1, imgView2;
+    TextView textView2, textView3;
 
 
     @Override
@@ -25,7 +24,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // id değerleri getirildi.
+        // id values are returned.
         playGame = findViewById(R.id.playGame);
         imgView1 = findViewById(R.id.imgView1);
         imgView2 = findViewById(R.id.imgView2);
@@ -35,32 +34,32 @@ public class MainActivity extends Activity {
     }
 
 
-    // oyunu oynatma metodu
+    // game play method
     public void playGame(View view) {
 
-        // value değerleri
+        // variable values
         int value1 = randomDiceValues();
         int value2 = randomDiceValues();
 
-        // resim değerlerini alma.
+        // get image values.
         int picture1 = getResources().getIdentifier("dice_" + value1, "drawable", getPackageName());
         int picture2 = getResources().getIdentifier("dice_" + value2, "drawable", getPackageName());
 
 
-        // resimleri yükleme
+        // upload pictures
         imgView1.setImageResource(picture1);
         imgView2.setImageResource(picture2);
 
 
-        // sonucları gösterme
+        // show results
         textView2.setText(String.valueOf(value1));
         textView3.setText(String.valueOf(value2));
 
     }
 
-    // Random değer üreten fonksiyon
+    // Random value generating function
     public static int randomDiceValues() {
-        return RANDOM.nextInt(6) + 1; // 1-6 arası
+        return RANDOM.nextInt(6) + 1; // 1-6
     }
 
 }
