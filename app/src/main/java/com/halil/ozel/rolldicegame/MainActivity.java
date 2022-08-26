@@ -30,13 +30,11 @@ public class MainActivity extends Activity {
         imgView2 = findViewById(R.id.imgView2);
         textView2 = findViewById(R.id.textView2);
         textView3 = findViewById(R.id.textView3);
-
     }
 
 
     // game play method
     public void playGame(View view) {
-
         // variable values
         int value1 = randomDiceValues();
         int value2 = randomDiceValues();
@@ -45,21 +43,17 @@ public class MainActivity extends Activity {
         int picture1 = getResources().getIdentifier("dice_" + value1, "drawable", getPackageName());
         int picture2 = getResources().getIdentifier("dice_" + value2, "drawable", getPackageName());
 
-
         // upload pictures
         imgView1.setImageResource(picture1);
         imgView2.setImageResource(picture2);
 
-
         // show results
         textView2.setText(String.valueOf(value1));
         textView3.setText(String.valueOf(value2));
-
     }
 
     // Random value generating function
     public static int randomDiceValues() {
         return RANDOM.nextInt(6) + 1; // 1-6
     }
-
 }
