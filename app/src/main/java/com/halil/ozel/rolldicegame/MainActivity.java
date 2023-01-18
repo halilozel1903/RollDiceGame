@@ -14,11 +14,9 @@ public class MainActivity extends Activity {
 
     // Creating an Random object.
     public static final Random RANDOM = new Random();
-
     Button playGame;
     ImageView imgView1, imgView2;
     TextView textView2, textView3;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
