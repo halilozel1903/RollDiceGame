@@ -30,9 +30,9 @@ public class MainActivity extends Activity {
         textView3 = findViewById(R.id.textView3);
     }
 
-
     // Game play method
     public void playGame(View view) {
+
         // Variable values
         int value1 = randomDiceValues();
         int value2 = randomDiceValues();
