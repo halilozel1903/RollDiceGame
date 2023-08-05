@@ -17,6 +17,7 @@ public class MainActivity extends Activity {
     Button playGame;
     ImageView imgView1, imgView2;
     TextView textView2, textView3;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +33,6 @@ public class MainActivity extends Activity {
 
     // Game play method
     public void playGame(View view) {
-
         // Variable values
         int value1 = randomDiceValues();
         int value2 = randomDiceValues();
