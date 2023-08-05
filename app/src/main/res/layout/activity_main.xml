@@ -70,7 +70,7 @@
         android:layout_marginLeft="73dp"
         android:layout_marginBottom="131dp"
         android:gravity="center"
-        android:text="5"
+        android:text="@string/five"
         android:textColor="@android:color/black"
         android:textSize="30sp" />
 
@@ -89,7 +89,7 @@
         android:layout_marginRight="71dp"
         android:layout_marginBottom="131dp"
         android:gravity="center"
-        android:text="2"
+        android:text="@string/two"
         android:textColor="@android:color/black"
         android:textSize="30sp" />
 
