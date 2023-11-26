@@ -2,5 +2,7 @@
     <string name="app_name">Roll Dice Game</string>
     <string name="two">2</string>
     <string name="five">5</string>
+    <string name="play_roll_dices">Play Roll Dices</string>
+    <string name="roll_dices_game">Roll Dices Game</string>
 
 </resources>

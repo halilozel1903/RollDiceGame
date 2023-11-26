@@ -38,7 +38,7 @@
         android:background="@drawable/button_shape"
         android:gravity="center"
         android:onClick="playGame"
-        android:text="Play Roll Dices"
+        android:text="@string/play_roll_dices"
         android:textColor="#000000"
         android:textSize="16sp" />
 
@@ -52,7 +52,7 @@
         android:layout_marginTop="22dp"
         android:background="#ff0000"
         android:gravity="center"
-        android:text="Roll Dices Game"
+        android:text="@string/roll_dices_game"
         android:textColor="#000000"
         android:textSize="20sp" />
 
