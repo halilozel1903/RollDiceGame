@@ -17,7 +17,6 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginEnd="25dp"
-            android:layout_marginRight="25dp"
             android:src="@drawable/dice_5"
             tools:ignore="ContentDescription" />
 
@@ -25,7 +24,7 @@
             android:id="@+id/imgView2"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginLeft="25dp"
+            android:layout_marginStart="25dp"
             android:src="@drawable/dice_2" />
     </LinearLayout>
 
@@ -48,10 +47,8 @@
         android:layout_width="383dp"
         android:layout_height="50dp"
         android:layout_alignStart="@+id/playGame"
-        android:layout_alignLeft="@+id/playGame"
         android:layout_alignParentTop="true"
         android:layout_marginStart="-63dp"
-        android:layout_marginLeft="-63dp"
         android:layout_marginTop="22dp"
         android:background="#ff0000"
         android:gravity="center"
@@ -64,10 +61,8 @@
         android:layout_width="89dp"
         android:layout_height="39dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="73dp"
-        android:layout_marginLeft="73dp"
         android:layout_marginBottom="131dp"
         android:gravity="center"
         android:text="@string/five"
@@ -79,14 +74,10 @@
         android:layout_width="89dp"
         android:layout_height="39dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="224dp"
-        android:layout_marginLeft="224dp"
         android:layout_marginEnd="71dp"
-        android:layout_marginRight="71dp"
         android:layout_marginBottom="131dp"
         android:gravity="center"
         android:text="@string/two"
