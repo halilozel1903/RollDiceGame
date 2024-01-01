@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 33
     defaultConfig {
+        compileSdk 33
         applicationId "com.halil.ozel.rolldicegame"
         minSdkVersion 24
         targetSdkVersion 33
