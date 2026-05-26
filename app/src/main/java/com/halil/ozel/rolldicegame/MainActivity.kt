@@ -10,7 +10,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -18,11 +17,12 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,13 +33,20 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -50,10 +57,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.halil.ozel.rolldicegame.game.Badge as GameBadge
+import com.halil.ozel.rolldicegame.game.BadgeId
 import com.halil.ozel.rolldicegame.game.DefaultDiceGameCatalog
 import com.halil.ozel.rolldicegame.game.DiceGameCatalog
 import com.halil.ozel.rolldicegame.game.DiceGameState
 import com.halil.ozel.rolldicegame.game.DiceUpgrade
+import com.halil.ozel.rolldicegame.game.RollRecord
 import com.halil.ozel.rolldicegame.game.UpgradeId
 import com.halil.ozel.rolldicegame.game.currentStage
 import com.halil.ozel.rolldicegame.game.playerLevel
@@ -70,7 +79,7 @@ class MainActivity : ComponentActivity() {
                 val viewModel: DiceGameViewModel = viewModel()
                 val state by viewModel.state.collectAsStateWithLifecycle()
 
-                DiceQuestScreen(
+                DiceQuestApp(
                     state = state,
                     catalog = DefaultDiceGameCatalog,
                     onRoll = viewModel::roll,
@@ -80,6 +89,16 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+private enum class DiceScreen(
+    val title: String,
+    @param:DrawableRes val icon: Int,
+) {
+    Play("Oyun", R.drawable.ic_nav_play),
+    Upgrades("Güçler", R.drawable.ic_nav_upgrades),
+    Badges("Rozetler", R.drawable.ic_nav_badges),
+    History("Geçmiş", R.drawable.ic_nav_history),
 }
 
 @Composable
@@ -113,51 +132,119 @@ private fun RollDiceTheme(content: @Composable () -> Unit) {
 }
 
 @Composable
-private fun DiceQuestScreen(
+private fun DiceQuestApp(
     state: DiceGameState,
     catalog: DiceGameCatalog,
     onRoll: () -> Unit,
     onReset: () -> Unit,
     onBuyUpgrade: (UpgradeId) -> Unit,
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-    ) {
+    var selectedScreen by rememberSaveable { mutableStateOf(DiceScreen.Play) }
+
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        bottomBar = {
+            DiceNavigationBar(
+                selectedScreen = selectedScreen,
+                onSelected = { selectedScreen = it },
+            )
+        },
+    ) { scaffoldPadding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
-                .navigationBarsPadding(),
+                .background(MaterialTheme.colorScheme.background)
+                .padding(scaffoldPadding)
+                .statusBarsPadding(),
             contentPadding = PaddingValues(horizontal = 18.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             item {
                 Header(state = state, catalog = catalog, onReset = onReset)
             }
-            item {
-                DiceBoard(state = state, onRoll = onRoll)
+
+            when (selectedScreen) {
+                DiceScreen.Play -> {
+                    item {
+                        DiceBoard(state = state, onRoll = onRoll)
+                    }
+                    item {
+                        StageProgress(state = state, catalog = catalog)
+                    }
+                    item {
+                        FeatureOverview(
+                            state = state,
+                            catalog = catalog,
+                            onScreenSelected = { selectedScreen = it },
+                        )
+                    }
+                }
+
+                DiceScreen.Upgrades -> {
+                    item {
+                        SectionTitle(title = "Yükseltmeler", subtitle = "Coinleri kalıcı oyun avantajlarına çevir.")
+                    }
+                    item {
+                        UpgradePanel(
+                            state = state,
+                            upgrades = catalog.upgrades,
+                            onBuyUpgrade = onBuyUpgrade,
+                        )
+                    }
+                }
+
+                DiceScreen.Badges -> {
+                    item {
+                        SectionTitle(title = "Rozet Koleksiyonu", subtitle = "Her başarı kendi görseli ve ödülüyle izlenir.")
+                    }
+                    item {
+                        BadgePanel(
+                            badges = catalog.badges,
+                            unlocked = state.unlockedBadges,
+                        )
+                    }
+                }
+
+                DiceScreen.History -> {
+                    item {
+                        SectionTitle(title = "Oyun Geçmişi", subtitle = "Son atışları ve seri performansını takip et.")
+                    }
+                    item {
+                        HistoryPanel(state = state)
+                    }
+                }
             }
-            item {
-                StageProgress(state = state, catalog = catalog)
-            }
-            item {
-                UpgradePanel(
-                    state = state,
-                    upgrades = catalog.upgrades,
-                    onBuyUpgrade = onBuyUpgrade,
-                )
-            }
-            item {
-                BadgePanel(
-                    badges = catalog.badges,
-                    unlocked = state.unlockedBadges,
-                )
-            }
-            item {
-                HistoryPanel(state = state)
-            }
+        }
+    }
+}
+
+@Composable
+private fun DiceNavigationBar(
+    selectedScreen: DiceScreen,
+    onSelected: (DiceScreen) -> Unit,
+) {
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.surface,
+        tonalElevation = 4.dp,
+    ) {
+        DiceScreen.entries.forEach { screen ->
+            NavigationBarItem(
+                selected = selectedScreen == screen,
+                onClick = { onSelected(screen) },
+                icon = {
+                    Image(
+                        painter = painterResource(id = screen.icon),
+                        contentDescription = screen.title,
+                        modifier = Modifier.size(24.dp),
+                    )
+                },
+                label = {
+                    Text(
+                        text = screen.title,
+                        maxLines = 1,
+                    )
+                },
+            )
         }
     }
 }
@@ -224,6 +311,26 @@ private fun Header(
                 StatPill(label = "Coin", value = state.coins.toString(), modifier = Modifier.weight(1f))
             }
         }
+    }
+}
+
+@Composable
+private fun SectionTitle(
+    title: String,
+    subtitle: String,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Black,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+        Text(
+            text = subtitle,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
     }
 }
 
@@ -443,38 +550,96 @@ private fun StageProgress(
 }
 
 @Composable
+private fun FeatureOverview(
+    state: DiceGameState,
+    catalog: DiceGameCatalog,
+    onScreenSelected: (DiceScreen) -> Unit,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Text(
+            text = "Macera Alanları",
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            FeatureCard(
+                title = "Güçler",
+                value = "${state.ownedUpgrades.size}/${catalog.upgrades.size}",
+                image = R.drawable.ic_upgrade_double,
+                modifier = Modifier.weight(1f),
+                onClick = { onScreenSelected(DiceScreen.Upgrades) },
+            )
+            FeatureCard(
+                title = "Rozetler",
+                value = "${state.unlockedBadges.size}/${catalog.badges.size}",
+                image = R.drawable.ic_badge_final,
+                modifier = Modifier.weight(1f),
+                onClick = { onScreenSelected(DiceScreen.Badges) },
+            )
+        }
+    }
+}
+
+@Composable
+private fun FeatureCard(
+    title: String,
+    value: String,
+    @DrawableRes image: Int,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier.height(118.dp),
+        shape = RoundedCornerShape(8.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+        ),
+        contentPadding = PaddingValues(12.dp),
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 1.dp),
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.Start,
+        ) {
+            Image(
+                painter = painterResource(id = image),
+                contentDescription = title,
+                modifier = Modifier.size(42.dp),
+            )
+            Column {
+                Text(text = title, fontWeight = FontWeight.Bold)
+                Text(
+                    text = value,
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Black,
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun UpgradePanel(
     state: DiceGameState,
     upgrades: List<DiceUpgrade>,
     onBuyUpgrade: (UpgradeId) -> Unit,
 ) {
-    ElevatedCard(
-        colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-        ),
-        shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp),
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            Text(
-                text = "Ödül Yükseltmeleri",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface,
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        upgrades.forEach { upgrade ->
+            UpgradeRow(
+                upgrade = upgrade,
+                isOwned = upgrade.id in state.ownedUpgrades,
+                canBuy = state.coins >= upgrade.cost,
+                onBuy = { onBuyUpgrade(upgrade.id) },
             )
-            upgrades.forEach { upgrade ->
-                UpgradeRow(
-                    upgrade = upgrade,
-                    isOwned = upgrade.id in state.ownedUpgrades,
-                    canBuy = state.coins >= upgrade.cost,
-                    onBuy = { onBuyUpgrade(upgrade.id) },
-                )
-            }
         }
     }
 }
@@ -486,17 +651,32 @@ private fun UpgradeRow(
     canBuy: Boolean,
     onBuy: () -> Unit,
 ) {
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
+    ElevatedCard(
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+        ),
         shape = RoundedCornerShape(8.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant,
-        contentColor = MaterialTheme.colorScheme.onSurface,
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp),
     ) {
         Row(
-            modifier = Modifier.padding(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(14.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            Surface(
+                modifier = Modifier.size(62.dp),
+                shape = RoundedCornerShape(8.dp),
+                color = MaterialTheme.colorScheme.tertiaryContainer,
+                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+            ) {
+                Image(
+                    painter = painterResource(id = upgradeDrawable(upgrade.id)),
+                    contentDescription = upgrade.title,
+                    modifier = Modifier.padding(12.dp),
+                )
+            }
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = upgrade.title,
@@ -530,8 +710,86 @@ private fun UpgradeRow(
 @Composable
 private fun BadgePanel(
     badges: List<GameBadge>,
-    unlocked: Set<com.halil.ozel.rolldicegame.game.BadgeId>,
+    unlocked: Set<BadgeId>,
 ) {
+    FlowRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        badges.forEach { badge ->
+            BadgeCard(
+                badge = badge,
+                isUnlocked = badge.id in unlocked,
+            )
+        }
+    }
+}
+
+@Composable
+private fun BadgeCard(
+    badge: GameBadge,
+    isUnlocked: Boolean,
+) {
+    val containerColor = if (isUnlocked) {
+        MaterialTheme.colorScheme.tertiaryContainer
+    } else {
+        MaterialTheme.colorScheme.surfaceVariant
+    }
+    val titleColor = if (isUnlocked) {
+        MaterialTheme.colorScheme.onTertiaryContainer
+    } else {
+        MaterialTheme.colorScheme.onSurfaceVariant
+    }
+
+    Surface(
+        modifier = Modifier
+            .width(156.dp)
+            .height(186.dp),
+        shape = RoundedCornerShape(8.dp),
+        color = containerColor,
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        shadowElevation = 1.dp,
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Image(
+                painter = painterResource(id = badgeDrawable(badge.id)),
+                contentDescription = badge.title,
+                modifier = Modifier
+                    .size(54.dp)
+                    .alpha(if (isUnlocked) 1f else 0.42f),
+            )
+            Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                Text(
+                    text = badge.title,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    fontWeight = FontWeight.Black,
+                    color = titleColor,
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                Text(
+                    text = if (isUnlocked) "Açık" else "Kilitli",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Text(
+                    text = "+${badge.xpReward} XP  +${badge.coinReward} coin",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun HistoryPanel(state: DiceGameState) {
     ElevatedCard(
         colors = CardDefaults.elevatedCardColors(
             containerColor = MaterialTheme.colorScheme.surface,
@@ -545,51 +803,29 @@ private fun BadgePanel(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Text(
-                text = "Rozetler",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-            FlowRow(
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
-                badges.forEach { badge ->
-                    val isUnlocked = badge.id in unlocked
-                    Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        color = if (isUnlocked) {
-                            MaterialTheme.colorScheme.tertiaryContainer
-                        } else {
-                            MaterialTheme.colorScheme.surfaceVariant
-                        },
-                        contentColor = MaterialTheme.colorScheme.onSurface,
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .width(150.dp)
-                                .padding(10.dp),
-                        ) {
-                            Text(
-                                text = badge.title,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                fontWeight = FontWeight.Bold,
-                                color = if (isUnlocked) {
-                                    MaterialTheme.colorScheme.onTertiaryContainer
-                                } else {
-                                    MaterialTheme.colorScheme.onSurfaceVariant
-                                },
-                            )
-                            Text(
-                                text = if (isUnlocked) "Açık" else "Kilitli",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                        }
-                    }
+                StatPill(
+                    label = "En iyi seri",
+                    value = "x${state.bestCombo}",
+                    modifier = Modifier.weight(1f),
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                )
+                StatPill(
+                    label = "Son zar",
+                    value = "${state.currentRoll.first}-${state.currentRoll.second}",
+                    modifier = Modifier.weight(1f),
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                )
+            }
+
+            if (state.history.isEmpty()) {
+                EmptyHistory()
+            } else {
+                state.history.forEach { record ->
+                    HistoryRow(record = record)
                 }
             }
         }
@@ -597,48 +833,83 @@ private fun BadgePanel(
 }
 
 @Composable
-private fun HistoryPanel(state: DiceGameState) {
-    if (state.history.isEmpty()) return
-
-    ElevatedCard(
-        colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-        ),
-        shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp),
+private fun EmptyHistory() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+        Image(
+            painter = painterResource(id = R.drawable.ic_nav_history),
+            contentDescription = "Geçmiş",
+            modifier = Modifier.size(48.dp),
+        )
+        Text(
+            text = "Henüz atış yok.",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodyLarge,
+        )
+    }
+}
+
+@Composable
+private fun HistoryRow(record: RollRecord) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant,
+    ) {
+        Row(
+            modifier = Modifier.padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = "Son Atışlar",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface,
+            Image(
+                painter = painterResource(id = R.drawable.ic_nav_play),
+                contentDescription = "Atış",
+                modifier = Modifier.size(34.dp),
             )
-            state.history.forEach { record ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = "${record.roll.first}-${record.roll.second}",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Text(
-                        text = "+${record.earnedScore}",
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "${record.roll.first}-${record.roll.second}",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    text = record.label,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
             }
+            Text(
+                text = "+${record.earnedScore}",
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Black,
+            )
         }
     }
+}
+
+@DrawableRes
+private fun badgeDrawable(id: BadgeId): Int = when (id) {
+    BadgeId.FIRST_ROLL -> R.drawable.ic_badge_first_roll
+    BadgeId.DOUBLE_STRIKE -> R.drawable.ic_badge_double
+    BadgeId.PERFECT_TWELVE -> R.drawable.ic_badge_twelve
+    BadgeId.COMBO_MASTER -> R.drawable.ic_badge_combo
+    BadgeId.COIN_KEEPER -> R.drawable.ic_badge_coin
+    BadgeId.STAGE_FIVE -> R.drawable.ic_badge_stage
+    BadgeId.FINAL_TABLE -> R.drawable.ic_badge_final
+}
+
+@DrawableRes
+private fun upgradeDrawable(id: UpgradeId): Int = when (id) {
+    UpgradeId.EXTRA_ATTEMPT -> R.drawable.ic_upgrade_attempt
+    UpgradeId.DOUBLE_BOOST -> R.drawable.ic_upgrade_double
+    UpgradeId.XP_TRAINING -> R.drawable.ic_upgrade_xp
 }
 
 @DrawableRes
