@@ -4,12 +4,15 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-class DiceGameEngineTest {
+class DiceGameReducerTest {
+    private val reducer = DiceGameReducer()
+    private val catalog = DefaultDiceGameCatalog
+
     @Test
     fun doubleRollAddsBonusAndUnlocksBadges() {
-        val state = DiceGameEngine.roll(
-            state = DiceGameEngine.newGame(),
-            nextRoll = { DiceRoll(6, 6) },
+        val state = reducer.reduce(
+            state = reducer.initialState(),
+            action = DiceGameAction.RollDice(DiceRoll(6, 6)),
         )
 
         assertEquals(20, state.history.first().earnedScore)
@@ -20,25 +23,28 @@ class DiceGameEngineTest {
 
     @Test
     fun reachingTargetCompletesStageAndPaysRewards() {
-        val startingState = DiceGameEngine.newGame().copy(roundScore = 32)
+        val startingState = reducer.initialState().copy(roundScore = 32)
 
-        val state = DiceGameEngine.roll(
+        val state = reducer.reduce(
             state = startingState,
-            nextRoll = { DiceRoll(1, 1) },
+            action = DiceGameAction.RollDice(DiceRoll(1, 1)),
         )
 
         assertEquals(1, state.stageIndex)
         assertEquals(0, state.roundScore)
-        assertEquals(DiceGameEngine.stages[1].maxRolls, state.rollsLeft)
-        assertTrue(state.xp >= DiceGameEngine.stages.first().xpReward)
-        assertTrue(state.coins >= DiceGameEngine.stages.first().coinReward)
+        assertEquals(catalog.stages[1].maxRolls, state.rollsLeft)
+        assertTrue(state.xp >= catalog.stages.first().xpReward)
+        assertTrue(state.coins >= catalog.stages.first().coinReward)
     }
 
     @Test
     fun buyingExtraAttemptIncreasesCurrentAllowance() {
-        val state = DiceGameEngine.newGame().copy(coins = 100)
+        val state = reducer.initialState().copy(coins = 100)
 
-        val upgraded = DiceGameEngine.buyUpgrade(state, UpgradeId.EXTRA_ATTEMPT)
+        val upgraded = reducer.reduce(
+            state = state,
+            action = DiceGameAction.BuyUpgrade(UpgradeId.EXTRA_ATTEMPT),
+        )
 
         assertTrue(UpgradeId.EXTRA_ATTEMPT in upgraded.ownedUpgrades)
         assertEquals(10, upgraded.coins)

@@ -49,18 +49,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.halil.ozel.rolldicegame.game.Badge as GameBadge
-import com.halil.ozel.rolldicegame.game.DiceGameEngine
+import com.halil.ozel.rolldicegame.game.DefaultDiceGameCatalog
+import com.halil.ozel.rolldicegame.game.DiceGameCatalog
 import com.halil.ozel.rolldicegame.game.DiceGameState
 import com.halil.ozel.rolldicegame.game.DiceUpgrade
 import com.halil.ozel.rolldicegame.game.UpgradeId
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import com.halil.ozel.rolldicegame.game.currentStage
+import com.halil.ozel.rolldicegame.game.playerLevel
+import com.halil.ozel.rolldicegame.game.stageProgress
+import com.halil.ozel.rolldicegame.game.xpInCurrentLevel
+import com.halil.ozel.rolldicegame.ui.DiceGameViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,29 +74,13 @@ class MainActivity : ComponentActivity() {
 
                 DiceQuestScreen(
                     state = state,
+                    catalog = DefaultDiceGameCatalog,
                     onRoll = viewModel::roll,
                     onReset = viewModel::reset,
                     onBuyUpgrade = viewModel::buyUpgrade,
                 )
             }
         }
-    }
-}
-
-class DiceGameViewModel : ViewModel() {
-    private val _state = MutableStateFlow(DiceGameEngine.newGame())
-    val state: StateFlow<DiceGameState> = _state.asStateFlow()
-
-    fun roll() {
-        _state.update { DiceGameEngine.roll(it) }
-    }
-
-    fun buyUpgrade(upgradeId: UpgradeId) {
-        _state.update { DiceGameEngine.buyUpgrade(it, upgradeId) }
-    }
-
-    fun reset() {
-        _state.value = DiceGameEngine.newGame()
     }
 }
 
@@ -124,6 +109,7 @@ private fun RollDiceTheme(content: @Composable () -> Unit) {
 @Composable
 private fun DiceQuestScreen(
     state: DiceGameState,
+    catalog: DiceGameCatalog,
     onRoll: () -> Unit,
     onReset: () -> Unit,
     onBuyUpgrade: (UpgradeId) -> Unit,
@@ -151,24 +137,24 @@ private fun DiceQuestScreen(
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             item {
-                Header(state = state, onReset = onReset)
+                Header(state = state, catalog = catalog, onReset = onReset)
             }
             item {
                 DiceBoard(state = state, onRoll = onRoll)
             }
             item {
-                StageProgress(state = state)
+                StageProgress(state = state, catalog = catalog)
             }
             item {
                 UpgradePanel(
                     state = state,
-                    upgrades = DiceGameEngine.upgrades,
+                    upgrades = catalog.upgrades,
                     onBuyUpgrade = onBuyUpgrade,
                 )
             }
             item {
                 BadgePanel(
-                    badges = DiceGameEngine.badges,
+                    badges = catalog.badges,
                     unlocked = state.unlockedBadges,
                 )
             }
@@ -182,8 +168,11 @@ private fun DiceQuestScreen(
 @Composable
 private fun Header(
     state: DiceGameState,
+    catalog: DiceGameCatalog,
     onReset: () -> Unit,
 ) {
+    val stage = state.currentStage(catalog)
+
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -199,7 +188,7 @@ private fun Header(
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    text = state.stage.title,
+                    text = stage.title,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.titleMedium,
                 )
@@ -214,8 +203,8 @@ private fun Header(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            StatPill(label = "Etap", value = "${state.stage.number}/${DiceGameEngine.stages.size}", modifier = Modifier.weight(1f))
-            StatPill(label = "Oyuncu", value = "Lv ${state.playerLevel}", modifier = Modifier.weight(1f))
+            StatPill(label = "Etap", value = "${stage.number}/${catalog.stages.size}", modifier = Modifier.weight(1f))
+            StatPill(label = "Oyuncu", value = "Lv ${state.playerLevel(catalog)}", modifier = Modifier.weight(1f))
             StatPill(label = "Coin", value = state.coins.toString(), modifier = Modifier.weight(1f))
         }
     }
@@ -351,9 +340,13 @@ private fun DiceFace(
 }
 
 @Composable
-private fun StageProgress(state: DiceGameState) {
+private fun StageProgress(
+    state: DiceGameState,
+    catalog: DiceGameCatalog,
+) {
+    val stage = state.currentStage(catalog)
     val animatedProgress by animateFloatAsState(
-        targetValue = state.progress,
+        targetValue = state.stageProgress(catalog),
         label = "stage-progress",
     )
 
@@ -375,12 +368,12 @@ private fun StageProgress(state: DiceGameState) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "Hedef ${state.stage.targetScore}",
+                    text = "Hedef ${stage.targetScore}",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
-                    text = "${state.roundScore}/${state.stage.targetScore}",
+                    text = "${state.roundScore}/${stage.targetScore}",
                     color = MaterialTheme.colorScheme.secondary,
                     fontWeight = FontWeight.Bold,
                 )
@@ -395,7 +388,7 @@ private fun StageProgress(state: DiceGameState) {
                 trackColor = MaterialTheme.colorScheme.surfaceVariant,
             )
             Text(
-                text = "XP ${state.xpInLevel}/${DiceGameEngine.xpPerPlayerLevel}",
+                text = "XP ${state.xpInCurrentLevel(catalog)}/${catalog.xpPerPlayerLevel}",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodyMedium,
             )
