@@ -33,16 +33,14 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -86,17 +84,25 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun RollDiceTheme(content: @Composable () -> Unit) {
-    val colors = darkColorScheme(
-        primary = Color(0xFF4ADE80),
-        onPrimary = Color(0xFF07230F),
-        secondary = Color(0xFFFACC15),
-        onSecondary = Color(0xFF2E2400),
-        tertiary = Color(0xFFFB7185),
-        background = Color(0xFF101411),
-        surface = Color(0xFF181C18),
-        surfaceVariant = Color(0xFF242A24),
-        onSurface = Color(0xFFF3F6EF),
-        onSurfaceVariant = Color(0xFFC8D0C3),
+    val colors = lightColorScheme(
+        primary = Color(0xFF2459A6),
+        onPrimary = Color.White,
+        primaryContainer = Color(0xFFDCEAFF),
+        onPrimaryContainer = Color(0xFF0F2D56),
+        secondary = Color(0xFFD97706),
+        onSecondary = Color.White,
+        secondaryContainer = Color(0xFFFFE8C2),
+        onSecondaryContainer = Color(0xFF4B2B00),
+        tertiary = Color(0xFF0F766E),
+        onTertiary = Color.White,
+        tertiaryContainer = Color(0xFFD8F3EF),
+        onTertiaryContainer = Color(0xFF083D39),
+        background = Color(0xFFF5F7FB),
+        surface = Color.White,
+        surfaceVariant = Color(0xFFE8EDF5),
+        onSurface = Color(0xFF172033),
+        onSurfaceVariant = Color(0xFF5C6678),
+        outline = Color(0xFFCAD3E1),
     )
 
     MaterialTheme(
@@ -114,27 +120,18 @@ private fun DiceQuestScreen(
     onReset: () -> Unit,
     onBuyUpgrade: (UpgradeId) -> Unit,
 ) {
-    val background = Brush.verticalGradient(
-        colors = listOf(
-            Color(0xFF101411),
-            Color(0xFF151B14),
-            Color(0xFF1B1712),
-            Color(0xFF111316),
-        ),
-    )
-
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(background),
+            .background(MaterialTheme.colorScheme.background),
     ) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding()
                 .navigationBarsPadding(),
-            contentPadding = PaddingValues(18.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp),
+            contentPadding = PaddingValues(horizontal = 18.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             item {
                 Header(state = state, catalog = catalog, onReset = onReset)
@@ -173,39 +170,59 @@ private fun Header(
 ) {
     val stage = state.currentStage(catalog)
 
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
+    Surface(
+        shape = RoundedCornerShape(8.dp),
+        color = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary,
+        shadowElevation = 1.dp,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "Roll Dice Quest",
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Black,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Text(
-                    text = stage.title,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    style = MaterialTheme.typography.titleMedium,
-                )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Roll Dice Quest",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Black,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    Text(
+                        text = stage.title,
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        style = MaterialTheme.typography.titleMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+                Spacer(modifier = Modifier.width(12.dp))
+                Button(
+                    onClick = onReset,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    ),
+                ) {
+                    Text("Sıfırla")
+                }
             }
-            Spacer(modifier = Modifier.width(12.dp))
-            OutlinedButton(onClick = onReset) {
-                Text("Sıfırla")
-            }
-        }
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            StatPill(label = "Etap", value = "${stage.number}/${catalog.stages.size}", modifier = Modifier.weight(1f))
-            StatPill(label = "Oyuncu", value = "Lv ${state.playerLevel(catalog)}", modifier = Modifier.weight(1f))
-            StatPill(label = "Coin", value = state.coins.toString(), modifier = Modifier.weight(1f))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                StatPill(label = "Etap", value = "${stage.number}/${catalog.stages.size}", modifier = Modifier.weight(1f))
+                StatPill(label = "Oyuncu", value = "Lv ${state.playerLevel(catalog)}", modifier = Modifier.weight(1f))
+                StatPill(label = "Coin", value = state.coins.toString(), modifier = Modifier.weight(1f))
+            }
         }
     }
 }
@@ -215,11 +232,14 @@ private fun StatPill(
     label: String,
     value: String,
     modifier: Modifier = Modifier,
+    containerColor: Color? = null,
 ) {
     Surface(
         modifier = modifier.height(62.dp),
         shape = RoundedCornerShape(8.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.78f),
+        color = containerColor ?: MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        shadowElevation = 1.dp,
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
@@ -228,14 +248,15 @@ private fun StatPill(
             Text(
                 text = label,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.labelSmall,
                 maxLines = 1,
             )
             Text(
                 text = value,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
         }
     }
@@ -248,15 +269,16 @@ private fun DiceBoard(
 ) {
     ElevatedCard(
         colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.88f),
+            containerColor = MaterialTheme.colorScheme.surface,
         ),
         shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+                .padding(18.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Row(
@@ -274,21 +296,44 @@ private fun DiceBoard(
                 )
             }
 
-            Text(
-                text = state.lastMessage,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis,
-            )
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            ) {
+                Text(
+                    text = state.lastMessage,
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
-                StatPill(label = "Kalan", value = state.rollsLeft.toString(), modifier = Modifier.weight(1f))
-                StatPill(label = "Kombo", value = "x${state.combo}", modifier = Modifier.weight(1f))
-                StatPill(label = "Toplam", value = state.roundScore.toString(), modifier = Modifier.weight(1f))
+                StatPill(
+                    label = "Kalan",
+                    value = state.rollsLeft.toString(),
+                    modifier = Modifier.weight(1f),
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                )
+                StatPill(
+                    label = "Kombo",
+                    value = "x${state.combo}",
+                    modifier = Modifier.weight(1f),
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                )
+                StatPill(
+                    label = "Toplam",
+                    value = state.roundScore.toString(),
+                    modifier = Modifier.weight(1f),
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                )
             }
 
             Button(
@@ -330,7 +375,7 @@ private fun DiceFace(
                 painter = painterResource(id = diceDrawable(targetFace)),
                 contentDescription = "Zar $targetFace",
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(18.dp)
                     .clip(RoundedCornerShape(6.dp)),
                 contentScale = ContentScale.Fit,
@@ -352,9 +397,10 @@ private fun StageProgress(
 
     ElevatedCard(
         colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.86f),
+            containerColor = MaterialTheme.colorScheme.surface,
         ),
         shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp),
     ) {
         Column(
             modifier = Modifier
@@ -374,7 +420,7 @@ private fun StageProgress(
                 )
                 Text(
                     text = "${state.roundScore}/${stage.targetScore}",
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold,
                 )
             }
@@ -384,7 +430,7 @@ private fun StageProgress(
                     .fillMaxWidth()
                     .height(10.dp)
                     .clip(RoundedCornerShape(8.dp)),
-                color = MaterialTheme.colorScheme.secondary,
+                color = MaterialTheme.colorScheme.primary,
                 trackColor = MaterialTheme.colorScheme.surfaceVariant,
             )
             Text(
@@ -404,9 +450,10 @@ private fun UpgradePanel(
 ) {
     ElevatedCard(
         colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.86f),
+            containerColor = MaterialTheme.colorScheme.surface,
         ),
         shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp),
     ) {
         Column(
             modifier = Modifier
@@ -418,6 +465,7 @@ private fun UpgradePanel(
                 text = "Ödül Yükseltmeleri",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
             )
             upgrades.forEach { upgrade ->
                 UpgradeRow(
@@ -441,7 +489,8 @@ private fun UpgradeRow(
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.62f),
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        contentColor = MaterialTheme.colorScheme.onSurface,
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
@@ -464,6 +513,12 @@ private fun UpgradeRow(
                 onClick = onBuy,
                 enabled = !isOwned && canBuy,
                 shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    contentColor = MaterialTheme.colorScheme.onTertiary,
+                    disabledContainerColor = MaterialTheme.colorScheme.outline,
+                    disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                ),
             ) {
                 Text(if (isOwned) "Aktif" else "${upgrade.cost}")
             }
@@ -479,9 +534,10 @@ private fun BadgePanel(
 ) {
     ElevatedCard(
         colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.86f),
+            containerColor = MaterialTheme.colorScheme.surface,
         ),
         shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp),
     ) {
         Column(
             modifier = Modifier
@@ -493,6 +549,7 @@ private fun BadgePanel(
                 text = "Rozetler",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
             )
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -504,10 +561,11 @@ private fun BadgePanel(
                     Surface(
                         shape = RoundedCornerShape(8.dp),
                         color = if (isUnlocked) {
-                            MaterialTheme.colorScheme.tertiary.copy(alpha = 0.28f)
+                            MaterialTheme.colorScheme.tertiaryContainer
                         } else {
-                            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.55f)
+                            MaterialTheme.colorScheme.surfaceVariant
                         },
+                        contentColor = MaterialTheme.colorScheme.onSurface,
                     ) {
                         Column(
                             modifier = Modifier
@@ -520,7 +578,7 @@ private fun BadgePanel(
                                 overflow = TextOverflow.Ellipsis,
                                 fontWeight = FontWeight.Bold,
                                 color = if (isUnlocked) {
-                                    MaterialTheme.colorScheme.tertiary
+                                    MaterialTheme.colorScheme.onTertiaryContainer
                                 } else {
                                     MaterialTheme.colorScheme.onSurfaceVariant
                                 },
@@ -544,9 +602,10 @@ private fun HistoryPanel(state: DiceGameState) {
 
     ElevatedCard(
         colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.86f),
+            containerColor = MaterialTheme.colorScheme.surface,
         ),
         shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp),
     ) {
         Column(
             modifier = Modifier
@@ -558,6 +617,7 @@ private fun HistoryPanel(state: DiceGameState) {
                 text = "Son Atışlar",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
             )
             state.history.forEach { record ->
                 Row(
@@ -572,7 +632,7 @@ private fun HistoryPanel(state: DiceGameState) {
                     )
                     Text(
                         text = "+${record.earnedScore}",
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
                     )
                 }
