@@ -12,8 +12,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -56,6 +54,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -730,22 +729,31 @@ private fun UpgradeRow(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun BadgePanel(
     badges: List<GameBadge>,
     unlocked: Set<BadgeId>,
 ) {
-    FlowRow(
+    Column(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        badges.forEach { badge ->
-            BadgeCard(
-                badge = badge,
-                isUnlocked = badge.id in unlocked,
-            )
+        badges.chunked(2).forEach { rowBadges ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                rowBadges.forEach { badge ->
+                    BadgeCard(
+                        badge = badge,
+                        isUnlocked = badge.id in unlocked,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+                if (rowBadges.size == 1) {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+            }
         }
     }
 }
@@ -754,6 +762,7 @@ private fun BadgePanel(
 private fun BadgeCard(
     badge: GameBadge,
     isUnlocked: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     val containerColor = if (isUnlocked) {
         MaterialTheme.colorScheme.tertiaryContainer
@@ -767,26 +776,31 @@ private fun BadgeCard(
     }
 
     Surface(
-        modifier = Modifier
-            .width(156.dp)
-            .height(186.dp),
+        modifier = modifier.height(164.dp),
         shape = RoundedCornerShape(8.dp),
         color = containerColor,
         contentColor = MaterialTheme.colorScheme.onSurface,
         shadowElevation = 1.dp,
     ) {
         Column(
-            modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(14.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
         ) {
             Image(
                 painter = painterResource(id = badgeDrawable(badge.id)),
                 contentDescription = badge.title,
                 modifier = Modifier
-                    .size(54.dp)
+                    .size(58.dp)
                     .alpha(if (isUnlocked) 1f else 0.42f),
             )
-            Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+            Spacer(modifier = Modifier.height(12.dp))
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(3.dp),
+            ) {
                 Text(
                     text = badge.title,
                     maxLines = 1,
@@ -794,11 +808,13 @@ private fun BadgeCard(
                     fontWeight = FontWeight.Black,
                     color = titleColor,
                     style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center,
                 )
                 Text(
                     text = if (isUnlocked) "Açık" else "Kilitli",
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
                 )
                 Text(
                     text = "+${badge.xpReward} XP  +${badge.coinReward} coin",
@@ -806,6 +822,7 @@ private fun BadgeCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.Center,
                 )
             }
         }
