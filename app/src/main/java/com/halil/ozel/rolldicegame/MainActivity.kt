@@ -36,12 +36,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -68,7 +72,10 @@ import com.halil.ozel.rolldicegame.game.currentStage
 import com.halil.ozel.rolldicegame.game.playerLevel
 import com.halil.ozel.rolldicegame.game.stageProgress
 import com.halil.ozel.rolldicegame.game.xpInCurrentLevel
+import com.halil.ozel.rolldicegame.ui.DiceGameEffect
+import com.halil.ozel.rolldicegame.ui.DiceGameIntent
 import com.halil.ozel.rolldicegame.ui.DiceGameViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,14 +84,22 @@ class MainActivity : ComponentActivity() {
         setContent {
             RollDiceTheme {
                 val viewModel: DiceGameViewModel = viewModel()
-                val state by viewModel.state.collectAsStateWithLifecycle()
+                val state by viewModel.uiState.collectAsStateWithLifecycle()
+                val snackbarHostState = remember { SnackbarHostState() }
+
+                LaunchedEffect(viewModel) {
+                    viewModel.effects.collectLatest { effect ->
+                        when (effect) {
+                            is DiceGameEffect.ToastMessage -> snackbarHostState.showSnackbar(effect.message)
+                        }
+                    }
+                }
 
                 DiceQuestApp(
                     state = state,
                     catalog = DefaultDiceGameCatalog,
-                    onRoll = viewModel::roll,
-                    onReset = viewModel::reset,
-                    onBuyUpgrade = viewModel::buyUpgrade,
+                    snackbarHostState = snackbarHostState,
+                    onIntent = viewModel::accept,
                 )
             }
         }
@@ -135,14 +150,16 @@ private fun RollDiceTheme(content: @Composable () -> Unit) {
 private fun DiceQuestApp(
     state: DiceGameState,
     catalog: DiceGameCatalog,
-    onRoll: () -> Unit,
-    onReset: () -> Unit,
-    onBuyUpgrade: (UpgradeId) -> Unit,
+    snackbarHostState: SnackbarHostState,
+    onIntent: (DiceGameIntent) -> Unit,
 ) {
     var selectedScreen by rememberSaveable { mutableStateOf(DiceScreen.Play) }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         bottomBar = {
             DiceNavigationBar(
                 selectedScreen = selectedScreen,
@@ -160,13 +177,20 @@ private fun DiceQuestApp(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             item {
-                Header(state = state, catalog = catalog, onReset = onReset)
+                Header(
+                    state = state,
+                    catalog = catalog,
+                    onReset = { onIntent(DiceGameIntent.ResetClicked) },
+                )
             }
 
             when (selectedScreen) {
                 DiceScreen.Play -> {
                     item {
-                        DiceBoard(state = state, onRoll = onRoll)
+                        DiceBoard(
+                            state = state,
+                            onRoll = { onIntent(DiceGameIntent.RollClicked) },
+                        )
                     }
                     item {
                         StageProgress(state = state, catalog = catalog)
@@ -188,7 +212,7 @@ private fun DiceQuestApp(
                         UpgradePanel(
                             state = state,
                             upgrades = catalog.upgrades,
-                            onBuyUpgrade = onBuyUpgrade,
+                            onBuyUpgrade = { onIntent(DiceGameIntent.UpgradeClicked(it)) },
                         )
                     }
                 }
