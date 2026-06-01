@@ -11,11 +11,11 @@ class DiceGameReducer(
 
     fun reduce(
         state: DiceGameState,
-        action: DiceGameAction,
-    ): DiceGameState = when (action) {
-        is DiceGameAction.RollDice -> roll(state, action.roll)
-        is DiceGameAction.BuyUpgrade -> buyUpgrade(state, action.upgradeId)
-        DiceGameAction.Reset -> initialState()
+        mutation: DiceGameMutation,
+    ): DiceGameState = when (mutation) {
+        is DiceGameMutation.RollResolved -> roll(state, mutation.roll)
+        is DiceGameMutation.UpgradeRequested -> buyUpgrade(state, mutation.upgradeId)
+        DiceGameMutation.NewGameRequested -> initialState()
     }
 
     private fun roll(

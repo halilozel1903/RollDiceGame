@@ -12,7 +12,7 @@ class DiceGameReducerTest {
     fun doubleRollAddsBonusAndUnlocksBadges() {
         val state = reducer.reduce(
             state = reducer.initialState(),
-            action = DiceGameAction.RollDice(DiceRoll(6, 6)),
+            mutation = DiceGameMutation.RollResolved(DiceRoll(6, 6)),
         )
 
         assertEquals(20, state.history.first().earnedScore)
@@ -27,7 +27,7 @@ class DiceGameReducerTest {
 
         val state = reducer.reduce(
             state = startingState,
-            action = DiceGameAction.RollDice(DiceRoll(1, 1)),
+            mutation = DiceGameMutation.RollResolved(DiceRoll(1, 1)),
         )
 
         assertEquals(1, state.stageIndex)
@@ -43,7 +43,7 @@ class DiceGameReducerTest {
 
         val upgraded = reducer.reduce(
             state = state,
-            action = DiceGameAction.BuyUpgrade(UpgradeId.EXTRA_ATTEMPT),
+            mutation = DiceGameMutation.UpgradeRequested(UpgradeId.EXTRA_ATTEMPT),
         )
 
         assertTrue(UpgradeId.EXTRA_ATTEMPT in upgraded.ownedUpgrades)
