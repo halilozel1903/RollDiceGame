@@ -72,10 +72,13 @@ Proje Kotlin ile yazıldı ve Android UI katmanında Jetpack Compose kullanılı
 - AndroidX Lifecycle
 - Kotlin Coroutines / Flow
 - JUnit 4
-- Android Gradle Plugin 9.2.1
-- Kotlin Compose plugin 2.3.21
-- Compile SDK 36
+- Android Gradle Plugin 9.4.0
+- Kotlin Compose plugin 2.4.20
+- Gradle 9.7.1
+- Compile SDK 37
+- Target SDK 37
 - Min SDK 24
+- Jetpack Compose BOM 2026.09.00
 
 ## Kurulum
 
