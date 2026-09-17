@@ -1,131 +1,117 @@
-# Roll Dice Game
+# Roll Dice Quest
 
-<img src="dice.jpg" width="300" alt="Roll Dice Game" />
+<p align="center">
+  <img src="dice.jpg" width="280" alt="Roll Dice Quest dice artwork" />
+</p>
 
-Roll Dice Game, klasik iki zar atma deneyimini etap hedefleri, XP/coin ekonomisi, kalıcı yükseltmeler, rozetler ve atış geçmişiyle daha oyunlaştırılmış bir Android deneyimine dönüştüren Kotlin + Jetpack Compose projesidir.
+<p align="center">
+  <img alt="Platform" src="https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white" />
+  <img alt="Kotlin" src="https://img.shields.io/badge/Kotlin-2.4.20-7F52FF?logo=kotlin&logoColor=white" />
+  <img alt="Jetpack Compose" src="https://img.shields.io/badge/Jetpack%20Compose-BOM%202026.09.00-4285F4?logo=jetpackcompose&logoColor=white" />
+  <img alt="API" src="https://img.shields.io/badge/API-24%2B-brightgreen" />
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-blue" />
+</p>
 
-## Son Güncellemeler
+A Kotlin + Jetpack Compose Android game that turns a classic two-dice roll into a staged quest with scoring, XP, coins, upgrades, badges, and roll history.
 
-- Proje arayüzü Jetpack Compose ve Material 3 ile yeniden kurgulandı.
-- Oyun artık `Roll Dice Quest` akışı üzerinden etap etap ilerliyor.
-- 6 farklı etap eklendi: Başlangıç Masası, Çift Zar Avı, Risk Koridoru, Kritik Seri, Şampiyon Masası ve Efsane Turu.
-- Her etap için hedef skor, maksimum zar hakkı, XP ödülü ve coin ödülü tanımlandı.
-- Zar atışlarına skor sistemi eklendi: zar toplamı, çift zar bonusu, kombo bonusu ve yükseltme bonusları birlikte hesaplanır.
-- XP, oyuncu seviyesi ve seviye içi ilerleme barları eklendi.
-- Coin sistemi eklendi ve coinler yükseltme satın almak için kullanılıyor.
-- 3 kalıcı yükseltme eklendi:
-  - Ek Deneme: her etapta 1 ekstra zar hakkı.
-  - Çift Zar Bonus: çift zar geldiğinde ek skor.
-  - Usta Antrenmanı: etap ödüllerinden ekstra XP.
-- 7 rozet eklendi:
-  - İlk Atış
-  - Çifte Güç
-  - On İki
-  - Seri Ustası
-  - Kasa Dolu
-  - Beşinci Masa
-  - Final Masası
-- Rozetler XP ve coin ödülleriyle birlikte açılıyor.
-- Alt navigasyon eklendi: Oyun, Güçler, Rozetler ve Geçmiş.
-- Son atış geçmişi, en iyi kombo ve son zar bilgileri takip ediliyor.
-- Oyun mesajları snackbar/effect akışı üzerinden gösteriliyor.
-- Oyun mantığı UI'dan ayrıldı; reducer tabanlı, test edilebilir bir state yapısı eklendi.
-- Reducer için unit testler eklendi.
-- Uygulama sürümü `2.0` olarak güncellendi.
+## Highlights
 
-## Oynanış
+- Six tables with rising score targets and limited rolls
+- Combo scoring from doubles, streaks, and upgrades
+- Persistent upgrades bought with coins
+- Seven badges with XP and coin rewards
+- Bottom navigation for Play, Powers, Badges, and History
+- Reducer-based game logic with unit tests
 
-Oyuncu iki zar atarak mevcut etabın hedef skoruna ulaşmaya çalışır. Her atış zarların toplamı kadar skor kazandırır. Çift zar geldiğinde ekstra bonus verilir; arka arkaya çift zarlar kombo skorunu büyütür.
+## Gameplay
 
-Etap hedefi tamamlanırsa oyuncu XP ve coin kazanıp sonraki masaya geçer. Zar hakkı biterse etap yeniden başlar, ancak oyuncu teselli XP'si alır. Coinler kalıcı yükseltmeler için harcanır; rozetler ise başarılara göre otomatik açılır.
+Roll two dice and chase the current table’s target score before your rolls run out.
 
-## Özellikler
+Each roll adds the dice total. Doubles award a bonus; consecutive doubles grow the combo. Clearing a table pays XP and coins and unlocks the next one. Running out of rolls restarts the table with consolation XP.
 
-- İki zarlı rastgele atış sistemi
-- Etap bazlı hedef ve ilerleme sistemi
-- XP, oyuncu seviyesi ve coin ekonomisi
-- Kombo, çift zar ve yükseltme bonusları
-- Kalıcı yükseltmeler
-- Ödüllü rozet koleksiyonu
-- Son atış geçmişi
-- Sıfırlama aksiyonu
-- Material 3 tabanlı modern Compose arayüzü
-- Edge-to-edge ekran desteği
+Coins buy permanent upgrades. Badges unlock automatically from achievements.
 
-## Teknik Yapı
+### Tables
 
-Proje Kotlin ile yazıldı ve Android UI katmanında Jetpack Compose kullanılıyor.
+| Table | Target | Rolls | XP | Coins |
+| --- | ---: | ---: | ---: | ---: |
+| Opening Table | 34 | 6 | 40 | 30 |
+| Doubles Hunt | 46 | 6 | 55 | 40 |
+| Risk Corridor | 58 | 7 | 70 | 55 |
+| Critical Streak | 72 | 7 | 90 | 70 |
+| Champion Table | 90 | 8 | 120 | 95 |
+| Legend Tour | 112 | 8 | 155 | 125 |
 
-- `MainActivity.kt`: Compose ekranları, navigasyon, tema ve UI bileşenleri.
-- `DiceGameViewModel.kt`: Kullanıcı intent'lerini alır, state'i günceller ve tek seferlik effect'leri yayar.
-- `DiceGameContract.kt`: UI intent ve effect sözleşmeleri.
-- `DiceGameReducer.kt`: Oyun kurallarını, skor hesaplamayı, etap geçişlerini, yükseltmeleri ve rozet açma mantığını yönetir.
-- `DiceGameModels.kt`: Oyun state'i, etap, zar, yükseltme, rozet ve geçmiş modelleri.
-- `DiceGameCatalog.kt`: Etap, yükseltme ve rozet katalogları.
-- `DiceRoller.kt`: Zar atma davranışını soyutlayan arayüz ve rastgele zar üretici.
+### Upgrades
 
-## Kullanılan Teknolojiler
+| Upgrade | Effect | Cost |
+| --- | --- | ---: |
+| Extra Attempt | +1 roll on every table | 90 |
+| Doubles Boost | +4 score on doubles | 130 |
+| Master Training | +20% XP from table rewards | 170 |
 
-- Kotlin
-- Jetpack Compose
-- Material 3
-- AndroidX Lifecycle
-- Kotlin Coroutines / Flow
-- JUnit 4
-- Android Gradle Plugin 9.4.0
-- Kotlin Compose plugin 2.4.20
-- Gradle 9.7.1
-- Compile SDK 37
-- Target SDK 37
-- Min SDK 24
-- Jetpack Compose BOM 2026.09.00
+### Badges
 
-## Kurulum
+| Badge | Unlock |
+| --- | --- |
+| First Roll | Roll for the first time |
+| Double Strike | Land a double |
+| Twelve | Roll 6-6 |
+| Combo Master | Reach a 3x combo |
+| Full Vault | Hold 250 coins |
+| Fifth Table | Reach table 5 |
+| Final Table | Reach Legend Tour |
 
-Projeyi Android Studio ile açıp çalıştırabilirsiniz.
+## Architecture
 
-Komut satırından debug build almak için:
+The UI is Compose. Game rules live in a reducer so scoring, stages, upgrades, and badges stay testable and independent of the screen.
+
+```text
+MainActivity  →  DiceGameViewModel  →  DiceGameReducer
+     UI              intents / state         rules
+                     one-shot effects
+```
+
+| File | Role |
+| --- | --- |
+| `MainActivity.kt` | Screens, navigation, theme, and Compose UI |
+| `DiceGameViewModel.kt` | Accepts intents, holds state, emits effects |
+| `DiceGameContract.kt` | UI intent and effect contract |
+| `DiceGameReducer.kt` | Scoring, stage flow, upgrades, and badges |
+| `DiceGameModels.kt` | State and domain models |
+| `DiceGameCatalog.kt` | Stage, upgrade, and badge definitions |
+| `DiceRoller.kt` | Dice rolling abstraction |
+
+## Tech stack
+
+| Layer | Version |
+| --- | --- |
+| Language | Kotlin 2.4.20 |
+| UI | Jetpack Compose BOM 2026.09.00, Material 3 |
+| Architecture | AndroidX Lifecycle, Coroutines / Flow |
+| Build | Gradle 9.7.1, Android Gradle Plugin 9.4.0 |
+| SDK | compile/target 37, min 24 |
+| Tests | JUnit 4 |
+
+## Getting started
+
+Open the project in Android Studio, then run the `app` configuration.
 
 ```bash
 ./gradlew :app:assembleDebug
-```
-
-Unit testleri çalıştırmak için:
-
-```bash
 ./gradlew test
 ```
 
-## Ekran Görüntüleri
+Requires JDK 17.
 
-Depodaki mevcut ekran görüntüleri:
+## Screenshots
 
-<img src="Screenshot_1539290025.png" width="200" alt="Screenshot 1" />
-<img src="Screenshot_1539290034.png" width="200" alt="Screenshot 2" />
-<img src="Screenshot_1539290044.png" width="200" alt="Screenshot 3" />
+<p>
+  <img src="Screenshot_1539290025.png" width="200" alt="Play screen" />
+  <img src="Screenshot_1539290034.png" width="200" alt="Game progress" />
+  <img src="Screenshot_1539290044.png" width="200" alt="Dice board" />
+</p>
 
-## Lisans
+## License
 
-```text
-MIT License
-
-Copyright (c) 2023 Halil OZEL
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+MIT. See [LICENSE](LICENSE).
