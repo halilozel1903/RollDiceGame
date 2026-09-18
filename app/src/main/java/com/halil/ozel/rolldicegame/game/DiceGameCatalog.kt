@@ -38,12 +38,19 @@ object DefaultDiceGameCatalog : DiceGameCatalog {
             description = "Etap ödüllerinden +%20 XP.",
             cost = 170,
         ),
+        DiceUpgrade(
+            id = UpgradeId.LUCKY_SEVEN,
+            title = "Şanslı Yedi",
+            description = "Toplam 7 geldiğinde +8 ekstra skor.",
+            cost = 110,
+        ),
     )
 
     override val badges: List<Badge> = listOf(
         Badge(BadgeId.FIRST_ROLL, "İlk Atış", "İlk zarı attın.", xpReward = 10, coinReward = 10),
         Badge(BadgeId.DOUBLE_STRIKE, "Çifte Güç", "Çift zar yakaladın.", xpReward = 20, coinReward = 15),
         Badge(BadgeId.PERFECT_TWELVE, "On İki", "6-6 attın.", xpReward = 35, coinReward = 25),
+        Badge(BadgeId.LUCKY_SEVEN, "Şanslı 7", "Zar toplamın 7 oldu.", xpReward = 25, coinReward = 20),
         Badge(BadgeId.COMBO_MASTER, "Seri Ustası", "3 komboya ulaştın.", xpReward = 45, coinReward = 35),
         Badge(BadgeId.COIN_KEEPER, "Kasa Dolu", "250 coin biriktirdin.", xpReward = 30, coinReward = 0),
         Badge(BadgeId.STAGE_FIVE, "Beşinci Masa", "5. etaba çıktın.", xpReward = 60, coinReward = 45),
