@@ -29,6 +29,7 @@ class DiceGameViewModel(
     fun accept(intent: DiceGameIntent) {
         when (intent) {
             DiceGameIntent.RollClicked -> dispatch(DiceGameMutation.RollResolved(diceRoller.roll()))
+            DiceGameIntent.ExtraRollClicked -> dispatch(DiceGameMutation.ExtraRollRequested)
             DiceGameIntent.ResetClicked -> dispatch(DiceGameMutation.NewGameRequested)
             is DiceGameIntent.UpgradeClicked -> dispatch(DiceGameMutation.UpgradeRequested(intent.upgradeId))
         }
