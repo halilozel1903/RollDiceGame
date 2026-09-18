@@ -15,6 +15,7 @@ class DiceGameReducer(
     ): DiceGameState = when (mutation) {
         is DiceGameMutation.RollResolved -> roll(state, mutation.roll)
         is DiceGameMutation.UpgradeRequested -> buyUpgrade(state, mutation.upgradeId)
+        DiceGameMutation.ExtraRollRequested -> grantExtraRoll(state)
         DiceGameMutation.NewGameRequested -> initialState()
     }
 
@@ -35,6 +36,7 @@ class DiceGameReducer(
             currentRoll = roll,
             lastMessage = scoring.record.label,
             history = history,
+            luckySevenCount = state.luckySevenCount + if (roll.isLuckySeven) 1 else 0,
         )
 
         val stage = state.currentStage(catalog)
@@ -79,8 +81,11 @@ class DiceGameReducer(
         val combo = if (roll.isDouble) state.combo + 1 else 0
         val doubleBonus = if (roll.isDouble) DoubleRollBonus else 0
         val upgradeBonus = if (roll.isDouble && UpgradeId.DOUBLE_BOOST in state.ownedUpgrades) DoubleBoostBonus else 0
+        val luckySevenBonus = if (roll.isLuckySeven) LuckySevenBonus else 0
+        val luckySevenUpgradeBonus =
+            if (roll.isLuckySeven && UpgradeId.LUCKY_SEVEN in state.ownedUpgrades) LuckySevenUpgradeBonus else 0
         val comboBonus = if (combo >= ComboBonusThreshold) combo * ComboScoreMultiplier else 0
-        val earnedScore = roll.sum + doubleBonus + upgradeBonus + comboBonus
+        val earnedScore = roll.sum + doubleBonus + upgradeBonus + luckySevenBonus + luckySevenUpgradeBonus + comboBonus
 
         return RollScoring(
             combo = combo,
@@ -88,7 +93,7 @@ class DiceGameReducer(
             record = RollRecord(
                 roll = roll,
                 earnedScore = earnedScore,
-                label = buildRollLabel(roll, earnedScore, combo, upgradeBonus),
+                label = buildRollLabel(roll, earnedScore, combo, upgradeBonus, luckySevenBonus + luckySevenUpgradeBonus),
             ),
         )
     }
@@ -116,6 +121,7 @@ class DiceGameReducer(
             coins = state.coins + completedStage.coinReward,
             combo = 0,
             lastMessage = message,
+            extraRollsLeft = ExtraRollsPerStage,
         )
     }
 
@@ -131,6 +137,7 @@ class DiceGameReducer(
             xp = state.xp + consolationXp,
             combo = 0,
             lastMessage = "Hedef kaçtı. +$consolationXp XP aldın, ${stage.title} yeniden başladı.",
+            extraRollsLeft = ExtraRollsPerStage,
         )
     }
 
@@ -160,6 +167,7 @@ class DiceGameReducer(
         BadgeId.FIRST_ROLL -> state.history.isNotEmpty()
         BadgeId.DOUBLE_STRIKE -> state.currentRoll.isDouble
         BadgeId.PERFECT_TWELVE -> state.currentRoll.first == 6 && state.currentRoll.second == 6
+        BadgeId.LUCKY_SEVEN -> state.currentRoll.isLuckySeven || state.luckySevenCount > 0
         BadgeId.COMBO_MASTER -> state.bestCombo >= 3
         BadgeId.COIN_KEEPER -> state.coins >= 250
         BadgeId.STAGE_FIVE -> state.currentStage(catalog).number >= 5
@@ -169,16 +177,31 @@ class DiceGameReducer(
     private fun extraAttemptCount(state: DiceGameState): Int =
         if (UpgradeId.EXTRA_ATTEMPT in state.ownedUpgrades) 1 else 0
 
+    private fun grantExtraRoll(state: DiceGameState): DiceGameState {
+        if (state.extraRollsLeft <= 0) {
+            return state.copy(lastMessage = "Bu etapta ekstra atış hakkın kalmadı.")
+        }
+
+        return state.copy(
+            extraRollsLeft = state.extraRollsLeft - 1,
+            rollsLeft = state.rollsLeft + 1,
+            lastMessage = "Ekstra atış hakkı kullanıldı. Kalan zar: ${state.rollsLeft + 1}.",
+        )
+    }
+
     private fun buildRollLabel(
         roll: DiceRoll,
         earnedScore: Int,
         combo: Int,
         upgradeBonus: Int,
+        luckyBonus: Int,
     ): String {
         val parts = mutableListOf("${roll.first} + ${roll.second} = ${roll.sum}", "+$earnedScore skor")
         if (roll.isDouble) parts += "çift bonus"
+        if (roll.isLuckySeven) parts += "şanslı 7"
         if (combo >= ComboBonusThreshold) parts += "kombo x$combo"
         if (upgradeBonus > 0) parts += "yükseltme +$upgradeBonus"
+        if (luckyBonus > 0) parts += "yedi +$luckyBonus"
         return parts.joinToString(" · ")
     }
 
@@ -197,5 +220,8 @@ class DiceGameReducer(
         const val MinConsolationXp = 8
         const val ConsolationXpDivider = 5
         const val XpTrainingMultiplier = 1.2
+        const val LuckySevenBonus = 5
+        const val LuckySevenUpgradeBonus = 8
+        const val ExtraRollsPerStage = 1
     }
 }
