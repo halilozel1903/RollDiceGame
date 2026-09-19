@@ -17,9 +17,10 @@ A Kotlin + Jetpack Compose Android game that turns a classic two-dice roll into 
 ## Highlights
 
 - Six tables with rising score targets and limited rolls
-- Combo scoring from doubles, streaks, and upgrades
+- Combo scoring from doubles, streaks, lucky sevens, and upgrades
+- One extra roll token each table
 - Persistent upgrades bought with coins
-- Seven badges with XP and coin rewards
+- Eight badges with XP and coin rewards
 - Bottom navigation for Play, Powers, Badges, and History
 - Reducer-based game logic with unit tests
 
@@ -27,7 +28,7 @@ A Kotlin + Jetpack Compose Android game that turns a classic two-dice roll into 
 
 Roll two dice and chase the current table’s target score before your rolls run out.
 
-Each roll adds the dice total. Doubles award a bonus; consecutive doubles grow the combo. Clearing a table pays XP and coins and unlocks the next one. Running out of rolls restarts the table with consolation XP.
+Each roll adds the dice total. Doubles award a bonus; consecutive doubles grow the combo. A total of 7 is a lucky seven and adds extra score. Clearing a table pays XP and coins and unlocks the next one. Running out of rolls restarts the table with consolation XP. Each table also grants one extra-roll token.
 
 Coins buy permanent upgrades. Badges unlock automatically from achievements.
 
@@ -49,6 +50,7 @@ Coins buy permanent upgrades. Badges unlock automatically from achievements.
 | Extra Attempt | +1 roll on every table | 90 |
 | Doubles Boost | +4 score on doubles | 130 |
 | Master Training | +20% XP from table rewards | 170 |
+| Lucky Seven | +8 extra score when the dice total 7 | 110 |
 
 ### Badges
 
@@ -57,6 +59,7 @@ Coins buy permanent upgrades. Badges unlock automatically from achievements.
 | First Roll | Roll for the first time |
 | Double Strike | Land a double |
 | Twelve | Roll 6-6 |
+| Lucky 7 | Roll a total of 7 |
 | Combo Master | Reach a 3x combo |
 | Full Vault | Hold 250 coins |
 | Fifth Table | Reach table 5 |

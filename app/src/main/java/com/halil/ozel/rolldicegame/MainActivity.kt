@@ -189,6 +189,7 @@ private fun DiceQuestApp(
                         DiceBoard(
                             state = state,
                             onRoll = { onIntent(DiceGameIntent.RollClicked) },
+                            onExtraRoll = { onIntent(DiceGameIntent.ExtraRollClicked) },
                         )
                     }
                     item {
@@ -396,6 +397,7 @@ private fun StatPill(
 private fun DiceBoard(
     state: DiceGameState,
     onRoll: () -> Unit,
+    onExtraRoll: () -> Unit,
 ) {
     ElevatedCard(
         colors = CardDefaults.elevatedCardColors(
@@ -466,21 +468,43 @@ private fun DiceBoard(
                 )
             }
 
-            Button(
-                onClick = onRoll,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(54.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                ),
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
-                Text(
-                    text = "Zar At",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                )
+                Button(
+                    onClick = onRoll,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(54.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                    ),
+                ) {
+                    Text(
+                        text = "Zar At",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+                Button(
+                    onClick = onExtraRoll,
+                    enabled = state.extraRollsLeft > 0,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(54.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        contentColor = MaterialTheme.colorScheme.onTertiary,
+                    ),
+                ) {
+                    Text(
+                        text = "Ekstra (${state.extraRollsLeft})",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
             }
         }
     }
@@ -855,6 +879,17 @@ private fun HistoryPanel(state: DiceGameState) {
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 )
                 StatPill(
+                    label = "Şanslı 7",
+                    value = state.luckySevenCount.toString(),
+                    modifier = Modifier.weight(1f),
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                )
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                StatPill(
                     label = "Son zar",
                     value = "${state.currentRoll.first}-${state.currentRoll.second}",
                     modifier = Modifier.weight(1f),
@@ -940,6 +975,7 @@ private fun badgeDrawable(id: BadgeId): Int = when (id) {
     BadgeId.FIRST_ROLL -> R.drawable.ic_badge_first_roll
     BadgeId.DOUBLE_STRIKE -> R.drawable.ic_badge_double
     BadgeId.PERFECT_TWELVE -> R.drawable.ic_badge_twelve
+    BadgeId.LUCKY_SEVEN -> R.drawable.ic_badge_lucky_seven
     BadgeId.COMBO_MASTER -> R.drawable.ic_badge_combo
     BadgeId.COIN_KEEPER -> R.drawable.ic_badge_coin
     BadgeId.STAGE_FIVE -> R.drawable.ic_badge_stage
@@ -951,6 +987,7 @@ private fun upgradeDrawable(id: UpgradeId): Int = when (id) {
     UpgradeId.EXTRA_ATTEMPT -> R.drawable.ic_upgrade_attempt
     UpgradeId.DOUBLE_BOOST -> R.drawable.ic_upgrade_double
     UpgradeId.XP_TRAINING -> R.drawable.ic_upgrade_xp
+    UpgradeId.LUCKY_SEVEN -> R.drawable.ic_upgrade_lucky
 }
 
 @DrawableRes

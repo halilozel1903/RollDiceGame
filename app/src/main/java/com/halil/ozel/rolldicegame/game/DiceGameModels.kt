@@ -11,6 +11,7 @@ data class DiceRoll(
 
     val sum: Int = first + second
     val isDouble: Boolean = first == second
+    val isLuckySeven: Boolean = sum == 7
 }
 
 data class DiceStage(
@@ -26,6 +27,7 @@ enum class UpgradeId {
     EXTRA_ATTEMPT,
     DOUBLE_BOOST,
     XP_TRAINING,
+    LUCKY_SEVEN,
 }
 
 data class DiceUpgrade(
@@ -39,6 +41,7 @@ enum class BadgeId {
     FIRST_ROLL,
     DOUBLE_STRIKE,
     PERFECT_TWELVE,
+    LUCKY_SEVEN,
     COMBO_MASTER,
     COIN_KEEPER,
     STAGE_FIVE,
@@ -72,6 +75,8 @@ data class DiceGameState(
     val ownedUpgrades: Set<UpgradeId> = emptySet(),
     val unlockedBadges: Set<BadgeId> = emptySet(),
     val history: List<RollRecord> = emptyList(),
+    val luckySevenCount: Int = 0,
+    val extraRollsLeft: Int = 1,
 )
 
 fun DiceGameState.currentStage(catalog: DiceGameCatalog): DiceStage = catalog.stages[stageIndex]
