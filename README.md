@@ -12,19 +12,36 @@
   <img alt="License" src="https://img.shields.io/badge/license-MIT-blue" />
 </p>
 
-<p align="center">
-  <img alt="android" src="https://img.shields.io/badge/topic-android-3DDC84" />
-  <img alt="kotlin" src="https://img.shields.io/badge/topic-kotlin-7F52FF" />
-  <img alt="jetpack-compose" src="https://img.shields.io/badge/topic-jetpack--compose-4285F4" />
-  <img alt="android-game" src="https://img.shields.io/badge/topic-android--game-6E40C9" />
-  <img alt="dice" src="https://img.shields.io/badge/topic-dice-D97706" />
-</p>
-
 Kotlin + Jetpack Compose Android game that turns two-dice rolls into a staged quest with XP, coins, upgrades, badges, and history.
 
 **About:** `Android dice quest in Kotlin and Jetpack Compose. Staged tables, lucky sevens, upgrades, badges, and extra rolls.`
 
-Suggested GitHub topics: `android`, `kotlin`, `jetpack-compose`, `android-game`, `dice`, `material3`
+## Topics
+
+18 GitHub topics (same count as the current sidebar), mixing high-traffic tags with the current Kotlin/Compose stack. Replaces Java-era and typo tags such as `game-developement`, `game-develop`, and `androiddeveloper`.
+
+<p align="center">
+  <a href="https://github.com/topics/android"><img alt="android" src="https://img.shields.io/badge/android-3DDC84?logo=android&logoColor=white" /></a>
+  <a href="https://github.com/topics/kotlin"><img alt="kotlin" src="https://img.shields.io/badge/kotlin-7F52FF?logo=kotlin&logoColor=white" /></a>
+  <a href="https://github.com/topics/jetpack-compose"><img alt="jetpack-compose" src="https://img.shields.io/badge/jetpack--compose-4285F4?logo=jetpackcompose&logoColor=white" /></a>
+  <a href="https://github.com/topics/material3"><img alt="material3" src="https://img.shields.io/badge/material3-6750A4" /></a>
+  <a href="https://github.com/topics/android-app"><img alt="android-app" src="https://img.shields.io/badge/android--app-3DDC84" /></a>
+  <a href="https://github.com/topics/android-application"><img alt="android-application" src="https://img.shields.io/badge/android--application-2E7D32" /></a>
+  <a href="https://github.com/topics/android-game"><img alt="android-game" src="https://img.shields.io/badge/android--game-6E40C9" /></a>
+  <a href="https://github.com/topics/android-development"><img alt="android-development" src="https://img.shields.io/badge/android--development-0F9D58" /></a>
+  <a href="https://github.com/topics/android-studio"><img alt="android-studio" src="https://img.shields.io/badge/android--studio-3DDC84?logo=androidstudio&logoColor=white" /></a>
+  <a href="https://github.com/topics/kotlin-android"><img alt="kotlin-android" src="https://img.shields.io/badge/kotlin--android-7F52FF" /></a>
+  <a href="https://github.com/topics/compose"><img alt="compose" src="https://img.shields.io/badge/compose-4285F4" /></a>
+  <a href="https://github.com/topics/jetpack"><img alt="jetpack" src="https://img.shields.io/badge/jetpack-4285F4" /></a>
+  <a href="https://github.com/topics/game"><img alt="game" src="https://img.shields.io/badge/game-2EA44F" /></a>
+  <a href="https://github.com/topics/game-development"><img alt="game-development" src="https://img.shields.io/badge/game--development-2EA44F" /></a>
+  <a href="https://github.com/topics/mobile-game"><img alt="mobile-game" src="https://img.shields.io/badge/mobile--game-0A66C2" /></a>
+  <a href="https://github.com/topics/dice"><img alt="dice" src="https://img.shields.io/badge/dice-D97706" /></a>
+  <a href="https://github.com/topics/roll-dice"><img alt="roll-dice" src="https://img.shields.io/badge/roll--dice-B45309" /></a>
+  <a href="https://github.com/topics/beginner"><img alt="beginner" src="https://img.shields.io/badge/beginner-EAB308" /></a>
+</p>
+
+`android` · `kotlin` · `jetpack-compose` · `material3` · `android-app` · `android-application` · `android-game` · `android-development` · `android-studio` · `kotlin-android` · `compose` · `jetpack` · `game` · `game-development` · `mobile-game` · `dice` · `roll-dice` · `beginner`
 
 ## Highlights
 
