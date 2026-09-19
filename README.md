@@ -12,25 +12,37 @@
   <img alt="License" src="https://img.shields.io/badge/license-MIT-blue" />
 </p>
 
-A Kotlin + Jetpack Compose Android game that turns a classic two-dice roll into a staged quest with scoring, XP, coins, upgrades, badges, and roll history.
+<p align="center">
+  <img alt="android" src="https://img.shields.io/badge/topic-android-3DDC84" />
+  <img alt="kotlin" src="https://img.shields.io/badge/topic-kotlin-7F52FF" />
+  <img alt="jetpack-compose" src="https://img.shields.io/badge/topic-jetpack--compose-4285F4" />
+  <img alt="android-game" src="https://img.shields.io/badge/topic-android--game-6E40C9" />
+  <img alt="dice" src="https://img.shields.io/badge/topic-dice-D97706" />
+</p>
+
+Kotlin + Jetpack Compose Android game that turns two-dice rolls into a staged quest with XP, coins, upgrades, badges, and history.
+
+**About:** `Android dice quest in Kotlin and Jetpack Compose. Staged tables, lucky sevens, upgrades, badges, and extra rolls.`
+
+Suggested GitHub topics: `android`, `kotlin`, `jetpack-compose`, `android-game`, `dice`, `material3`
 
 ## Highlights
 
 - Six tables with rising score targets and limited rolls
 - Combo scoring from doubles, streaks, lucky sevens, and upgrades
-- One extra roll token each table
+- One extra roll token on every table
 - Persistent upgrades bought with coins
 - Eight badges with XP and coin rewards
 - Bottom navigation for Play, Powers, Badges, and History
-- Reducer-based game logic with unit tests
+- Reducer-based rules with unit tests
 
 ## Gameplay
 
-Roll two dice and chase the current table’s target score before your rolls run out.
+Roll two dice and chase the current table’s target before your rolls run out.
 
 Each roll adds the dice total. Doubles award a bonus; consecutive doubles grow the combo. A total of 7 is a lucky seven and adds extra score. Clearing a table pays XP and coins and unlocks the next one. Running out of rolls restarts the table with consolation XP. Each table also grants one extra-roll token.
 
-Coins buy permanent upgrades. Badges unlock automatically from achievements.
+Coins buy permanent upgrades. Badges unlock from achievements.
 
 ### Tables
 
@@ -110,9 +122,9 @@ Requires JDK 17.
 ## Screenshots
 
 <p>
-  <img src="Screenshot_1539290025.png" width="200" alt="Play screen" />
-  <img src="Screenshot_1539290034.png" width="200" alt="Game progress" />
-  <img src="Screenshot_1539290044.png" width="200" alt="Dice board" />
+  <img src="Screenshot_1539290025.png" width="200" alt="Play screen with dice, score, and roll actions" />
+  <img src="Screenshot_1539290034.png" width="200" alt="Stage progress and player stats" />
+  <img src="Screenshot_1539290044.png" width="200" alt="Dice board after a roll" />
 </p>
 
 ## License
