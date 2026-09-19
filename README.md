@@ -12,25 +12,54 @@
   <img alt="License" src="https://img.shields.io/badge/license-MIT-blue" />
 </p>
 
-A Kotlin + Jetpack Compose Android game that turns a classic two-dice roll into a staged quest with scoring, XP, coins, upgrades, badges, and roll history.
+Kotlin + Jetpack Compose Android game that turns two-dice rolls into a staged quest with XP, coins, upgrades, badges, and history.
+
+**About:** `Android dice quest in Kotlin and Jetpack Compose. Staged tables, lucky sevens, upgrades, badges, and extra rolls.`
+
+## Topics
+
+18 GitHub topics (same count as the current sidebar), mixing high-traffic tags with the current Kotlin/Compose stack. Replaces Java-era and typo tags such as `game-developement`, `game-develop`, and `androiddeveloper`.
+
+<p align="center">
+  <a href="https://github.com/topics/android"><img alt="android" src="https://img.shields.io/badge/android-3DDC84?logo=android&logoColor=white" /></a>
+  <a href="https://github.com/topics/kotlin"><img alt="kotlin" src="https://img.shields.io/badge/kotlin-7F52FF?logo=kotlin&logoColor=white" /></a>
+  <a href="https://github.com/topics/jetpack-compose"><img alt="jetpack-compose" src="https://img.shields.io/badge/jetpack--compose-4285F4?logo=jetpackcompose&logoColor=white" /></a>
+  <a href="https://github.com/topics/material3"><img alt="material3" src="https://img.shields.io/badge/material3-6750A4" /></a>
+  <a href="https://github.com/topics/android-app"><img alt="android-app" src="https://img.shields.io/badge/android--app-3DDC84" /></a>
+  <a href="https://github.com/topics/android-application"><img alt="android-application" src="https://img.shields.io/badge/android--application-2E7D32" /></a>
+  <a href="https://github.com/topics/android-game"><img alt="android-game" src="https://img.shields.io/badge/android--game-6E40C9" /></a>
+  <a href="https://github.com/topics/android-development"><img alt="android-development" src="https://img.shields.io/badge/android--development-0F9D58" /></a>
+  <a href="https://github.com/topics/android-studio"><img alt="android-studio" src="https://img.shields.io/badge/android--studio-3DDC84?logo=androidstudio&logoColor=white" /></a>
+  <a href="https://github.com/topics/kotlin-android"><img alt="kotlin-android" src="https://img.shields.io/badge/kotlin--android-7F52FF" /></a>
+  <a href="https://github.com/topics/compose"><img alt="compose" src="https://img.shields.io/badge/compose-4285F4" /></a>
+  <a href="https://github.com/topics/jetpack"><img alt="jetpack" src="https://img.shields.io/badge/jetpack-4285F4" /></a>
+  <a href="https://github.com/topics/game"><img alt="game" src="https://img.shields.io/badge/game-2EA44F" /></a>
+  <a href="https://github.com/topics/game-development"><img alt="game-development" src="https://img.shields.io/badge/game--development-2EA44F" /></a>
+  <a href="https://github.com/topics/mobile-game"><img alt="mobile-game" src="https://img.shields.io/badge/mobile--game-0A66C2" /></a>
+  <a href="https://github.com/topics/dice"><img alt="dice" src="https://img.shields.io/badge/dice-D97706" /></a>
+  <a href="https://github.com/topics/roll-dice"><img alt="roll-dice" src="https://img.shields.io/badge/roll--dice-B45309" /></a>
+  <a href="https://github.com/topics/beginner"><img alt="beginner" src="https://img.shields.io/badge/beginner-EAB308" /></a>
+</p>
+
+`android` · `kotlin` · `jetpack-compose` · `material3` · `android-app` · `android-application` · `android-game` · `android-development` · `android-studio` · `kotlin-android` · `compose` · `jetpack` · `game` · `game-development` · `mobile-game` · `dice` · `roll-dice` · `beginner`
 
 ## Highlights
 
 - Six tables with rising score targets and limited rolls
 - Combo scoring from doubles, streaks, lucky sevens, and upgrades
-- One extra roll token each table
+- One extra roll token on every table
 - Persistent upgrades bought with coins
 - Eight badges with XP and coin rewards
 - Bottom navigation for Play, Powers, Badges, and History
-- Reducer-based game logic with unit tests
+- Reducer-based rules with unit tests
 
 ## Gameplay
 
-Roll two dice and chase the current table’s target score before your rolls run out.
+Roll two dice and chase the current table’s target before your rolls run out.
 
 Each roll adds the dice total. Doubles award a bonus; consecutive doubles grow the combo. A total of 7 is a lucky seven and adds extra score. Clearing a table pays XP and coins and unlocks the next one. Running out of rolls restarts the table with consolation XP. Each table also grants one extra-roll token.
 
-Coins buy permanent upgrades. Badges unlock automatically from achievements.
+Coins buy permanent upgrades. Badges unlock from achievements.
 
 ### Tables
 
@@ -110,9 +139,9 @@ Requires JDK 17.
 ## Screenshots
 
 <p>
-  <img src="Screenshot_1539290025.png" width="200" alt="Play screen" />
-  <img src="Screenshot_1539290034.png" width="200" alt="Game progress" />
-  <img src="Screenshot_1539290044.png" width="200" alt="Dice board" />
+  <img src="Screenshot_1539290025.png" width="200" alt="Play screen with dice, score, and roll actions" />
+  <img src="Screenshot_1539290034.png" width="200" alt="Stage progress and player stats" />
+  <img src="Screenshot_1539290044.png" width="200" alt="Dice board after a roll" />
 </p>
 
 ## License
