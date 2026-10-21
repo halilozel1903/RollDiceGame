@@ -71,7 +71,7 @@ data class DiceGameState(
     val combo: Int = 0,
     val bestCombo: Int = 0,
     val currentRoll: DiceRoll = DiceRoll(5, 2),
-    val lastMessage: String = "İlk hedef hazır. Masaya çık ve puanı topla.",
+    val lastMessage: String = "The first target is ready. Step up and score.",
     val ownedUpgrades: Set<UpgradeId> = emptySet(),
     val unlockedBadges: Set<BadgeId> = emptySet(),
     val history: List<RollRecord> = emptyList(),

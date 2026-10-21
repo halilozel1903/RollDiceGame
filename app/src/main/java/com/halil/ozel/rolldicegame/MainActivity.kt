@@ -109,10 +109,10 @@ private enum class DiceScreen(
     val title: String,
     @param:DrawableRes val icon: Int,
 ) {
-    Play("Oyun", R.drawable.ic_nav_play),
-    Upgrades("Güçler", R.drawable.ic_nav_upgrades),
-    Badges("Rozetler", R.drawable.ic_nav_badges),
-    History("Geçmiş", R.drawable.ic_nav_history),
+    Play("Play", R.drawable.ic_nav_play),
+    Upgrades("Powers", R.drawable.ic_nav_upgrades),
+    Badges("Badges", R.drawable.ic_nav_badges),
+    History("History", R.drawable.ic_nav_history),
 }
 
 @Composable
@@ -206,7 +206,7 @@ private fun DiceQuestApp(
 
                 DiceScreen.Upgrades -> {
                     item {
-                        SectionTitle(title = "Yükseltmeler", subtitle = "Coinleri kalıcı oyun avantajlarına çevir.")
+                        SectionTitle(title = "Upgrades", subtitle = "Turn coins into permanent advantages.")
                     }
                     item {
                         UpgradePanel(
@@ -219,7 +219,7 @@ private fun DiceQuestApp(
 
                 DiceScreen.Badges -> {
                     item {
-                        SectionTitle(title = "Rozet Koleksiyonu", subtitle = "Her başarı kendi görseli ve ödülüyle izlenir.")
+                        SectionTitle(title = "Badge Collection", subtitle = "Each achievement has its own icon and reward.")
                     }
                     item {
                         BadgePanel(
@@ -231,7 +231,7 @@ private fun DiceQuestApp(
 
                 DiceScreen.History -> {
                     item {
-                        SectionTitle(title = "Oyun Geçmişi", subtitle = "Son atışları ve seri performansını takip et.")
+                        SectionTitle(title = "Roll History", subtitle = "Review recent rolls and your streak.")
                     }
                     item {
                         HistoryPanel(state = state)
@@ -322,7 +322,7 @@ private fun Header(
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     ),
                 ) {
-                    Text("Sıfırla")
+                    Text("Reset")
                 }
             }
 
@@ -330,8 +330,8 @@ private fun Header(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                StatPill(label = "Etap", value = "${stage.number}/${catalog.stages.size}", modifier = Modifier.weight(1f))
-                StatPill(label = "Oyuncu", value = "Lv ${state.playerLevel(catalog)}", modifier = Modifier.weight(1f))
+                StatPill(label = "Table", value = "${stage.number}/${catalog.stages.size}", modifier = Modifier.weight(1f))
+                StatPill(label = "Player", value = "Lv ${state.playerLevel(catalog)}", modifier = Modifier.weight(1f))
                 StatPill(label = "Coin", value = state.coins.toString(), modifier = Modifier.weight(1f))
             }
         }
@@ -449,19 +449,19 @@ private fun DiceBoard(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 StatPill(
-                    label = "Kalan",
+                    label = "Left",
                     value = state.rollsLeft.toString(),
                     modifier = Modifier.weight(1f),
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 )
                 StatPill(
-                    label = "Kombo",
+                    label = "Combo",
                     value = "x${state.combo}",
                     modifier = Modifier.weight(1f),
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 )
                 StatPill(
-                    label = "Toplam",
+                    label = "Score",
                     value = state.roundScore.toString(),
                     modifier = Modifier.weight(1f),
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -483,7 +483,7 @@ private fun DiceBoard(
                     ),
                 ) {
                     Text(
-                        text = "Zar At",
+                        text = "Roll Dice",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                     )
@@ -500,7 +500,7 @@ private fun DiceBoard(
                     ),
                 ) {
                     Text(
-                        text = "Ekstra (${state.extraRollsLeft})",
+                        text = "Extra (${state.extraRollsLeft})",
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
                     )
@@ -527,7 +527,7 @@ private fun DiceFace(
         ) { targetFace ->
             Image(
                 painter = painterResource(id = diceDrawable(targetFace)),
-                contentDescription = "Zar $targetFace",
+                contentDescription = "Die $targetFace",
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(18.dp)
@@ -568,7 +568,7 @@ private fun StageProgress(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "Hedef ${stage.targetScore}",
+                    text = "Target ${stage.targetScore}",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                 )
@@ -604,7 +604,7 @@ private fun FeatureOverview(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text(
-            text = "Macera Alanları",
+            text = "Adventure Tables",
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface,
@@ -614,14 +614,14 @@ private fun FeatureOverview(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             FeatureCard(
-                title = "Güçler",
+                title = "Powers",
                 value = "${state.ownedUpgrades.size}/${catalog.upgrades.size}",
                 image = R.drawable.ic_upgrade_double,
                 modifier = Modifier.weight(1f),
                 onClick = { onScreenSelected(DiceScreen.Upgrades) },
             )
             FeatureCard(
-                title = "Rozetler",
+                title = "Badges",
                 value = "${state.unlockedBadges.size}/${catalog.badges.size}",
                 image = R.drawable.ic_badge_final,
                 modifier = Modifier.weight(1f),
@@ -747,7 +747,7 @@ private fun UpgradeRow(
                     disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
             ) {
-                Text(if (isOwned) "Aktif" else "${upgrade.cost}")
+                Text(if (isOwned) "Active" else "${upgrade.cost}")
             }
         }
     }
@@ -835,7 +835,7 @@ private fun BadgeCard(
                     textAlign = TextAlign.Center,
                 )
                 Text(
-                    text = if (isUnlocked) "Açık" else "Kilitli",
+                    text = if (isUnlocked) "Unlocked" else "Locked",
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
@@ -873,13 +873,13 @@ private fun HistoryPanel(state: DiceGameState) {
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 StatPill(
-                    label = "En iyi seri",
+                    label = "Best streak",
                     value = "x${state.bestCombo}",
                     modifier = Modifier.weight(1f),
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 )
                 StatPill(
-                    label = "Şanslı 7",
+                    label = "Lucky 7",
                     value = state.luckySevenCount.toString(),
                     modifier = Modifier.weight(1f),
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -890,7 +890,7 @@ private fun HistoryPanel(state: DiceGameState) {
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 StatPill(
-                    label = "Son zar",
+                    label = "Last roll",
                     value = "${state.currentRoll.first}-${state.currentRoll.second}",
                     modifier = Modifier.weight(1f),
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -919,11 +919,11 @@ private fun EmptyHistory() {
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_nav_history),
-            contentDescription = "Geçmiş",
+            contentDescription = "History",
             modifier = Modifier.size(48.dp),
         )
         Text(
-            text = "Henüz atış yok.",
+            text = "No rolls yet.",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             style = MaterialTheme.typography.bodyLarge,
         )
@@ -944,7 +944,7 @@ private fun HistoryRow(record: RollRecord) {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_nav_play),
-                contentDescription = "Atış",
+                contentDescription = "Roll",
                 modifier = Modifier.size(34.dp),
             )
             Column(modifier = Modifier.weight(1f)) {
