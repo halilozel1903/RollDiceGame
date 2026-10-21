@@ -61,7 +61,7 @@ class DiceGameReducerTest {
         assertEquals(12, state.history.first().earnedScore)
         assertEquals(1, state.luckySevenCount)
         assertTrue(BadgeId.LUCKY_SEVEN in state.unlockedBadges)
-        assertTrue(state.history.first().label.contains("şanslı 7"))
+        assertTrue(state.history.first().label.contains("lucky 7"))
     }
 
     @Test

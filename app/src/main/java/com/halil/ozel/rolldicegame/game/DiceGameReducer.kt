@@ -55,16 +55,16 @@ class DiceGameReducer(
     ): DiceGameState {
         val upgrade = catalog.upgrades.first { it.id == upgradeId }
         if (upgrade.id in state.ownedUpgrades) {
-            return state.copy(lastMessage = "${upgrade.title} zaten aktif.")
+            return state.copy(lastMessage = "${upgrade.title} is already active.")
         }
         if (state.coins < upgrade.cost) {
-            return state.copy(lastMessage = "${upgrade.title} için ${upgrade.cost - state.coins} coin daha lazım.")
+            return state.copy(lastMessage = "Need ${upgrade.cost - state.coins} more coins for ${upgrade.title}.")
         }
 
         val upgraded = state.copy(
             coins = state.coins - upgrade.cost,
             ownedUpgrades = state.ownedUpgrades + upgrade.id,
-            lastMessage = "${upgrade.title} açıldı.",
+            lastMessage = "${upgrade.title} unlocked.",
         )
 
         return if (upgrade.id == UpgradeId.EXTRA_ATTEMPT) {
@@ -108,9 +108,9 @@ class DiceGameReducer(
         val nextStage = catalog.stages[nextIndex]
         val rollAllowance = nextStage.maxRolls + extraAttemptCount(state)
         val message = if (state.stageIndex == catalog.stages.lastIndex) {
-            "Efsane turu temizlendi: +$xpReward XP, +${completedStage.coinReward} coin."
+            "Legend Tour cleared: +$xpReward XP, +${completedStage.coinReward} coins."
         } else {
-            "${completedStage.title} tamamlandı: +$xpReward XP, +${completedStage.coinReward} coin."
+            "${completedStage.title} cleared: +$xpReward XP, +${completedStage.coinReward} coins."
         }
 
         return state.copy(
@@ -136,7 +136,7 @@ class DiceGameReducer(
             rollsLeft = stage.maxRolls + extraAttemptCount(state),
             xp = state.xp + consolationXp,
             combo = 0,
-            lastMessage = "Hedef kaçtı. +$consolationXp XP aldın, ${stage.title} yeniden başladı.",
+            lastMessage = "Target missed. You earned +$consolationXp XP. ${stage.title} restarted.",
             extraRollsLeft = ExtraRollsPerStage,
         )
     }
@@ -156,7 +156,7 @@ class DiceGameReducer(
             xp = state.xp + xpReward,
             coins = state.coins + coinReward,
             unlockedBadges = state.unlockedBadges + newlyUnlocked.map { it.id },
-            lastMessage = "Rozet açıldı: $titles. +$xpReward XP, +$coinReward coin.",
+            lastMessage = "Badge unlocked: $titles. +$xpReward XP, +$coinReward coins.",
         )
     }
 
@@ -179,13 +179,13 @@ class DiceGameReducer(
 
     private fun grantExtraRoll(state: DiceGameState): DiceGameState {
         if (state.extraRollsLeft <= 0) {
-            return state.copy(lastMessage = "Bu etapta ekstra atış hakkın kalmadı.")
+            return state.copy(lastMessage = "No extra rolls left on this table.")
         }
 
         return state.copy(
             extraRollsLeft = state.extraRollsLeft - 1,
             rollsLeft = state.rollsLeft + 1,
-            lastMessage = "Ekstra atış hakkı kullanıldı. Kalan zar: ${state.rollsLeft + 1}.",
+            lastMessage = "Extra roll used. Rolls left: ${state.rollsLeft + 1}.",
         )
     }
 
@@ -196,12 +196,12 @@ class DiceGameReducer(
         upgradeBonus: Int,
         luckyBonus: Int,
     ): String {
-        val parts = mutableListOf("${roll.first} + ${roll.second} = ${roll.sum}", "+$earnedScore skor")
-        if (roll.isDouble) parts += "çift bonus"
-        if (roll.isLuckySeven) parts += "şanslı 7"
-        if (combo >= ComboBonusThreshold) parts += "kombo x$combo"
-        if (upgradeBonus > 0) parts += "yükseltme +$upgradeBonus"
-        if (luckyBonus > 0) parts += "yedi +$luckyBonus"
+        val parts = mutableListOf("${roll.first} + ${roll.second} = ${roll.sum}", "+$earnedScore score")
+        if (roll.isDouble) parts += "doubles bonus"
+        if (roll.isLuckySeven) parts += "lucky 7"
+        if (combo >= ComboBonusThreshold) parts += "combo x$combo"
+        if (upgradeBonus > 0) parts += "upgrade +$upgradeBonus"
+        if (luckyBonus > 0) parts += "seven +$luckyBonus"
         return parts.joinToString(" · ")
     }
 
